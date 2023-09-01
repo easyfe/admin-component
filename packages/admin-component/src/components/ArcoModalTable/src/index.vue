@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import type { Modal } from "@arco-design/web-vue";
 // import { cloneDeep } from "lodash-es";
-import { ArcoTable } from "@/components/ArcoTable";
+import { ArcoTable } from "@ap/components/ArcoTable";
 import { ref, computed, watch, watchEffect } from "vue";
 
 defineOptions({

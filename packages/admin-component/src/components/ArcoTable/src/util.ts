@@ -1,6 +1,6 @@
-import { BaseTableColunmBtn } from "@/utils/tableHelper";
-import { typeHelper } from "@/utils/typeHelper";
-import { _Btn } from "@/utils/types";
+import { BaseTableColunmBtn } from "@ap/utils/tableHelper";
+import { typeHelper } from "@ap/utils/typeHelper";
+import { _Btn } from "@ap/utils/types";
 
 /** 检查右上角按钮是否显示 */
 export function handleCheckBtnIf(btn: _Btn): boolean {

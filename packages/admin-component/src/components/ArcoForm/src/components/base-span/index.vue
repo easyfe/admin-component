@@ -6,7 +6,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import FormItem from "../form-item/index.vue";
-import { RichText } from "@/components/RichText";
+import { RichText } from "@ap/components/RichText";
 
 defineOptions({
     name: "Span"

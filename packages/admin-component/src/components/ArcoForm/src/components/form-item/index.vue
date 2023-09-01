@@ -21,7 +21,7 @@
 import { computed, useAttrs } from "vue";
 import { IconQuestionCircleFill } from "@arco-design/web-vue/es/icon";
 import FormExtra from "../form-extra/index.vue";
-import { RichText } from "@/components/RichText";
+import { RichText } from "@ap/components/RichText";
 
 defineOptions({
     name: "FormItem"

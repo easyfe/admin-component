@@ -208,8 +208,8 @@
 </template>
 
 <script lang="ts" setup>
-import { _Btn, _TableColumn, _TableConfig } from "@/utils/types";
-import { BaseTableColunmBtn } from "@/utils/tableHelper";
+import { _Btn, _TableColumn, _TableConfig } from "@ap/utils/types";
+import { BaseTableColunmBtn } from "@ap/utils/tableHelper";
 import {
     handleCheckBtnIf,
     handleCheckBtnDidsable,
@@ -218,10 +218,10 @@ import {
     handleSetColumnBtnLabel,
     arrIncludes
 } from "./util";
-import { dateHelper } from "@/utils/dateHelper";
+import { dateHelper } from "@ap/utils/dateHelper";
 import { cloneDeep, debounce } from "lodash-es";
-import { ArcoForm } from "@/components/ArcoForm";
-import { Svg } from "@/components/Svg";
+import { ArcoForm } from "@ap/components/ArcoForm";
+import { Svg } from "@ap/components/Svg";
 import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount } from "vue";
 
 defineOptions({

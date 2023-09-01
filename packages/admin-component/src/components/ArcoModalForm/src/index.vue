@@ -17,9 +17,9 @@
     </a-modal>
 </template>
 <script setup lang="ts">
-import { formHelper } from "@/utils/formHelper";
+import { formHelper } from "@ap/utils/formHelper";
 import type { Modal } from "@arco-design/web-vue";
-import { ArcoForm } from "@/components/ArcoForm";
+import { ArcoForm } from "@ap/components/ArcoForm";
 import { ref, computed, watch } from "vue";
 
 defineOptions({

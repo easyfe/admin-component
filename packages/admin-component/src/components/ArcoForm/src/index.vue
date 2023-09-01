@@ -20,7 +20,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { typeHelper } from "@/utils/typeHelper";
+import { typeHelper } from "@ap/utils/typeHelper";
 import { cloneDeep } from "lodash-es";
 import { FormInstance, ValidatedError } from "@arco-design/web-vue";
 import componentList from "./components/index";

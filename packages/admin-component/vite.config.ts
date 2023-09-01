@@ -13,7 +13,7 @@ function resolvePath(paths: string): string {
 export default defineConfig({
     resolve: {
         alias: {
-            "@": resolvePath("src")
+            "@ap": resolvePath("src")
         }
     },
     build: {
