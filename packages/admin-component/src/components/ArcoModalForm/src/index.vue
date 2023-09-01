@@ -1,0 +1,133 @@
+<template>
+    <a-modal
+        :visible="computedVisible"
+        :on-before-ok="handleOk"
+        top="10vh"
+        ok-text="确定"
+        v-bind="privateModalConfig"
+        @cancel="handleCancel"
+    >
+        <div class="base-modal-content">
+            <arco-form ref="modalForm" v-model="privateFormData" :config="props.formConfig">
+                <template v-for="(_, slotName) in $slots" #[slotName]>
+                    <slot :name="slotName"></slot>
+                </template>
+            </arco-form>
+        </div>
+    </a-modal>
+</template>
+<script setup lang="ts">
+import { formHelper } from "@/utils/formHelper";
+import type { Modal } from "@arco-design/web-vue";
+import { ArcoForm } from "@/components/ArcoForm";
+import { ref, computed, watch } from "vue";
+
+defineOptions({
+    name: "AroModalForm"
+});
+
+const props = withDefaults(
+    defineProps<{
+        visible: boolean; //是否显示
+        value?: Record<string, any>; //表单数据
+        modalConfig?: InstanceType<typeof Modal>["$props"]; //modal配置
+        formConfig?: Record<string, any>[]; //表单配置
+        //以下用于函数式调用
+        destroy?: () => void; //销毁方法
+        ok?: (data: Record<string, any>) => Promise<void>; //确定方法
+        change?: (data: Record<string, any>) => void; //表单数据变化
+    }>(),
+    {
+        visible: () => false,
+        value: () => ({}),
+        modalConfig: () => <any>{},
+        formConfig: () => [],
+        destroy: undefined,
+        ok: undefined,
+        change: undefined
+    }
+);
+
+const emits = defineEmits<{
+    (e: "update:visible", data: boolean): void;
+    (e: "ok", data: Record<string, any>): void;
+}>();
+
+const modalForm = ref();
+
+const fnVisible = ref(true);
+
+const computedVisible = computed(() => {
+    return fnVisible.value && props.visible;
+});
+
+const privateModalConfig = computed<any>(() => {
+    const defaultConfig = {
+        maskClosable: false,
+        alignCenter: false,
+        titleAlign: "start",
+        top: "10vh",
+        okText: "确定",
+        width: "700px"
+    };
+    return { ...defaultConfig, ...props.modalConfig };
+});
+
+const privateFormData = ref({});
+
+watch(
+    () => props.value,
+    (newVal) => {
+        if (newVal) {
+            privateFormData.value = newVal;
+        }
+    },
+    {
+        immediate: true
+    }
+);
+
+watch(
+    () => privateFormData.value,
+    (v) => {
+        if (props.change) {
+            props.change(v);
+        }
+    },
+    {
+        deep: true
+    }
+);
+
+async function handleOk() {
+    if (modalForm.value) {
+        await formHelper.validate(modalForm.value);
+    }
+    if (props.ok) {
+        await props.ok(privateFormData.value);
+    } else {
+        emits("ok", privateFormData.value);
+    }
+    onClose();
+}
+
+function handleCancel() {
+    onClose();
+}
+
+function onClose() {
+    emits("update:visible", false);
+    //如果存在destroy方法，说明是函数式调用，需要手动销毁
+    if (props.destroy) {
+        fnVisible.value = false;
+        setTimeout(() => {
+            props.destroy?.();
+        }, 500);
+    }
+}
+</script>
+<style scoped lang="scss">
+.base-modal-content {
+    max-height: 60vh;
+}
+</style>

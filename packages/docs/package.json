@@ -1,0 +1,24 @@
+{
+    "name": "@easyfe/docs",
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+        "docs:dev": "vitepress dev",
+        "docs:build": "vitepress build",
+        "docs:preview": "vitepress preview"
+    },
+    "dependencies": {
+        "vue": "latest",
+        "@arco-design/web-vue": "latest",
+        "@easyfe/admin-component": "latest",
+        "lodash-es": "latest",
+        "@easyfe/web-request": "latest"
+    },
+    "devDependencies": {
+        "@types/lodash-es": "latest",
+        "@vitepress-demo-preview/plugin": "1.2.2",
+        "@vitepress-demo-preview/component": "2.3.2",
+        "unocss": "^0.53.1",
+        "vitepress": "1.0.0-beta.3"
+    }
+}

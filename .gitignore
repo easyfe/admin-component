@@ -1,0 +1,10 @@
+node_modules/
+dist
+/docs
+auto-imports.d.ts
+components.d.ts
+/es
+/lib
+cache
+packages/admin-component/dist
+.temp
