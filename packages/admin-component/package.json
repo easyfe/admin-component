@@ -12,8 +12,7 @@
     "typings": "dist/index.d.ts",
     "scripts": {
         "start:lib": "vite build -w",
-        "build:lib": "rimraf dist es lib && vue-tsc --noEmit && vite build",
-        "prepublishOnly": "npm run build:lib"
+        "build:lib": "rimraf dist es lib && vue-tsc --noEmit && vite build"
     },
     "peerDependencies": {
         "@arco-design/web-vue": "^2.50.0",

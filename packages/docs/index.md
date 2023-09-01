@@ -11,13 +11,13 @@ hero:
           link: /docs/ArcoTable/README
         - theme: alt
           text: View on Github
-          link: /api-examples
+          link: https://github.com/easyfe/admin-component
 
 features:
-    - title: Feature A
-      details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-    - title: Feature B
-      details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-    - title: Feature C
-      details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+    - title: 支持 Vue3 Vite
+      details: 支持 Vue3 Vite，速度更快，体积更小
+    - title: 开箱即用
+      details: 大部分组件简单配置即可使用
+    - title: 帮助工具
+      details: 提供各种helper方法
 ---
