@@ -1,6 +1,6 @@
 {
     "name": "@easyfe/admin-component",
-    "version": "0.2.2-beta.0",
+    "version": "0.2.3",
     "files": [
         "dist",
         "LICENSE",
