@@ -1,6 +1,6 @@
 {
     "name": "@easyfe/admin-component",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "files": [
         "dist",
         "LICENSE",
@@ -14,8 +14,7 @@
         "start:lib": "vite build -w",
         "build:lib": "rimraf dist es lib && vue-tsc --noEmit && vite build"
     },
-    "dependencies": {},
-    "peerDependencies": {
+    "dependencies": {
         "@caohenghu/vue-colorpicker": "^1.2.4",
         "@tinymce/tinymce-vue": "^5.1.0",
         "dayjs": "^1.11.9",
@@ -26,5 +25,6 @@
         "vue-gpickr": "^1.0.0",
         "@arco-design/web-vue": "^2.50.0",
         "vue": "^3.2.23"
-    }
+    },
+    "peerDependencies": {}
 }
