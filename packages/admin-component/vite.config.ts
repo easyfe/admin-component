@@ -27,7 +27,10 @@ export default defineConfig({
         rollupOptions: {
             // 确保外部化处理那些你不想打包进库的依赖
             // external: [/node_modules/],
-            external: [...Object.keys(require("./package.json").dependencies)],
+            external: [
+                ...Object.keys(require("./package.json").dependencies),
+                ...Object.keys(require("./package.json").peerDependencies)
+            ],
             // output: [
             //     {
             //         //打包格式
