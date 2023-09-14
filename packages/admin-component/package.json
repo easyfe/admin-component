@@ -14,17 +14,17 @@
         "start:lib": "vite build -w",
         "build:lib": "rimraf dist es lib && vue-tsc --noEmit && vite build"
     },
-    "dependencies": {
-        "@arco-design/web-vue": "^2.50.0",
+    "dependencies": {},
+    "peerDependencies": {
         "@caohenghu/vue-colorpicker": "^1.2.4",
         "@tinymce/tinymce-vue": "^5.1.0",
         "dayjs": "^1.11.9",
         "hex-to-css-filter": "^5.4.0",
         "lodash-es": "^4.17.21",
         "tinymce": "^6.6.2",
-        "vue": "^3.2.23",
         "vue-dompurify-html": "^4.1.4",
-        "vue-gpickr": "^1.0.0"
-    },
-    "peerDependencies": {}
+        "vue-gpickr": "^1.0.0",
+        "@arco-design/web-vue": "^2.50.0",
+        "vue": "^3.2.23"
+    }
 }
