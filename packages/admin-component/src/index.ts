@@ -40,8 +40,7 @@ export * from "./components/ArcoModal";
 import { formHelper } from "./utils/formHelper";
 import { tableHelper } from "./utils/tableHelper";
 import { ruleHelper } from "./utils/ruleHelper";
-import { getRangeColor } from "./utils/getRangeColor";
 
-export { formHelper, tableHelper, ruleHelper, getRangeColor };
+export { formHelper, tableHelper, ruleHelper };
 
 import "./style/index.scss";

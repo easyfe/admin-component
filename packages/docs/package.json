@@ -8,8 +8,8 @@
         "docs:preview": "vitepress preview"
     },
     "dependencies": {
-        "vue": "latest",
-        "@arco-design/web-vue": "latest",
+        "vue": "^3.2.23",
+        "@arco-design/web-vue": "^2.50.0",
         "@easyfe/admin-component": "latest",
         "lodash-es": "latest",
         "@easyfe/web-request": "latest"

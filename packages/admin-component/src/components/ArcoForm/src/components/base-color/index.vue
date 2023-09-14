@@ -6,23 +6,21 @@
                     <div class="base-color-inner" :style="{ background: model }"></div>
                 </div>
                 <template #content>
-                    <color-picker
-                        class="color"
-                        theme="light"
-                        :color="model"
-                        :sucker-hide="true"
-                        :sucker-canvas="suckerCanvas"
-                        :sucker-area="suckerArea"
-                        @changeColor="changeColor"
-                    />
+                    <color-picker v-model:pureColor="model" disable-history is-widget format="hex"></color-picker>
                 </template>
             </a-trigger>
-            <div class="base-color-reset"><a-button type="text" @click="reset">重置</a-button></div>
+            <!-- <div class="base-color-wrapper" :trigger="['click']">
+                <color-picker v-model:pureColor="model" disable-history></color-picker>
+            </div> -->
+            <div class="base-color-reset">
+                <a-button type="text" @click="reset">重置</a-button>
+            </div>
         </a-space>
     </form-item>
 </template>
 <script lang="ts" setup>
-import colorPicker from "@caohenghu/vue-colorpicker";
+import { ColorPicker } from "vue3-colorpicker";
+import "vue3-colorpicker/style.css";
 import { computed, onMounted, ref } from "vue";
 import { rgbaToHex } from "./untils";
 import FormItem from "../form-item/index.vue";
@@ -46,9 +44,6 @@ onMounted(() => {
     if (!props.modelValue) reset();
 });
 
-const suckerCanvas = ref(null);
-const suckerArea = ref([]);
-
 const emits = defineEmits<{
     (e: "update:modelValue", data: any): void;
 }>();
@@ -61,7 +56,7 @@ const model = computed({
     get: () => {
         return props.modelValue;
     },
-    set: (newVal) => {
+    set: (newVal: any) => {
         emits("update:modelValue", newVal);
     }
 });
@@ -89,4 +84,9 @@ const changeColor = (color: any): void => {
         border-radius: 2px;
     }
 }
+// :deep(.vc-color-wrap) {
+//     margin-right: 0;
+//     width: 100%;
+//     height: 100%;
+// }
 </style>

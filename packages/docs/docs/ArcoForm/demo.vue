@@ -15,7 +15,7 @@ const form = ref();
 const formData = ref({
     key12: "https://cdn.v2ex.com/avatar/1b4e/0a2d/614153_xlarge.png?m=1681735508",
     key1: "这是input组件value",
-    key8: "#fff",
+    key8: "#000",
     key5: [],
     key6: "",
     text: `这是一段介绍文字<font style='color:red;padding-left:10px;font-weight:bold'>支持HTML</font>`
@@ -32,7 +32,9 @@ const formConfig = computed(() => {
             labelTips: `提示内容第一点`,
             inputTips: `示文案这是示文案是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案`
         }),
-        formHelper.color("颜色", "key8"),
+        formHelper.color("颜色", "key8", {
+            defaultColor: "#f5511e"
+        }),
         formHelper.checkbox(
             "多选框",
             "key2",

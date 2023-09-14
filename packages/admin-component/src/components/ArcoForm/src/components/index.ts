@@ -9,7 +9,6 @@ const list: Record<string, any> = {
     time: defineAsyncComponent(() => import("./base-time/index.vue")),
     switch: defineAsyncComponent(() => import("./base-switch/index.vue")),
     color: defineAsyncComponent(() => import("./base-color/index.vue")),
-    colorRange: defineAsyncComponent(() => import("./base-color-range/index.vue")),
     checkbox: defineAsyncComponent(() => import("./base-checkbox/index.vue")),
     radio: defineAsyncComponent(() => import("./base-radio/index.vue")),
     select: defineAsyncComponent(() => import("./base-select/index.vue")),

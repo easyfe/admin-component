@@ -195,21 +195,6 @@ const formHelper = {
         };
     },
     /**
-     * 渐变颜色选择器
-     * @param label
-     * @param field
-     * @param extra
-     * @returns
-     */
-    colorRange(label: string, field: string, extra?: BaseFormExtra) {
-        return {
-            inputType: "colorRange",
-            label,
-            field,
-            ...extra
-        };
-    },
-    /**
      * 复选框
      * @param label
      * @param field
