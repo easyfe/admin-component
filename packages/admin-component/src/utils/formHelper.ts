@@ -20,7 +20,9 @@ import {
     BaseFormWeekPicker,
     BaseFormYearPicker,
     DateType,
-    BaseFormTextarea
+    BaseFormTextarea,
+    BaseFormCascaderOptions,
+    BaseFormCascader
 } from "./types";
 import { nextTick } from "vue";
 
@@ -244,6 +246,28 @@ const formHelper = {
         };
         return {
             inputType: "select",
+            label,
+            options,
+            field,
+            ...extra
+        };
+    },
+    /**
+     * 级联选择器
+     * @param label
+     * @param field
+     * @param options
+     * @param extra
+     * @returns
+     */
+    cascader(label: string, field: string, options: BaseFormCascaderOptions[], extra?: BaseFormCascader) {
+        extra = {
+            ...extra,
+            placeholder: extra?.placeholder ?? "请选择",
+            allowClear: extra?.clearable ?? true
+        };
+        return {
+            inputType: "cascader",
             label,
             options,
             field,

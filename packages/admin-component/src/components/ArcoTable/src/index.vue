@@ -8,7 +8,7 @@
             <!-- table左上角切换tab -->
             <div class="tabs">
                 <a-radio-group v-if="tabsShow" v-model="privateFilterData.tabsData" type="button">
-                    <template v-for="(item, index) in privateTableConfig?.tabs">
+                    <template v-for="(item, index) in privateTableConfig?.tlBtns">
                         <a-radio v-if="item.if !== false" :key="index" :value="item.value"
                             >{{ item.label }}
                             <template v-if="item.count">
@@ -25,15 +25,15 @@
             <div class="btns">
                 <a-space>
                     <template v-if="btnsShow">
-                        <template v-for="(item, index) in privateTableConfig?.btns">
+                        <template v-for="(item, index) in privateTableConfig?.trBtns">
                             <a-button
                                 v-if="handleCheckBtnIf(item)"
                                 :key="index"
                                 :type="item.type || 'primary'"
                                 :status="item.status || 'normal'"
-                                :disabled="handleCheckBtnDidsable(item) || item.loading"
+                                :disabled="handleCheckBtnDidsable(item) || item.loading || false"
                                 :icon="item.icon"
-                                :loading="item.loading"
+                                :loading="item.loading || false"
                                 @click="handleExtraButtonClick(item)"
                                 >{{ item.label }}</a-button
                             >
@@ -42,28 +42,86 @@
                     <!-- 右侧插槽 -->
                     <slot name="btns-slot"></slot>
                     <!-- 列表展示方式 -->
-                    <a-radio-group v-if="props.allowFlatten" v-model="flattenType" class="view-list">
+                    <a-radio-group v-if="privateTableConfig.allowFlatten" v-model="flattenType" class="view-list">
                         <a-radio value="app">
                             <template #radio="{ checked }">
                                 <div :class="['view-item', checked ? 'view-item-active' : '']">
-                                    <Svg
-                                        name="https://api.iconify.design/ion/grid-outline.svg"
-                                        :width="22"
-                                        :height="22"
-                                        :color="checked ? 'rgb(var(--primary-6))' : '#888888'"
-                                    ></Svg>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="1em"
+                                        height="1em"
+                                        viewBox="0 0 512 512"
+                                    >
+                                        <rect
+                                            width="176"
+                                            height="176"
+                                            x="48"
+                                            y="48"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="32"
+                                            rx="20"
+                                            ry="20"
+                                        />
+                                        <rect
+                                            width="176"
+                                            height="176"
+                                            x="288"
+                                            y="48"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="32"
+                                            rx="20"
+                                            ry="20"
+                                        />
+                                        <rect
+                                            width="176"
+                                            height="176"
+                                            x="48"
+                                            y="288"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="32"
+                                            rx="20"
+                                            ry="20"
+                                        />
+                                        <rect
+                                            width="176"
+                                            height="176"
+                                            x="288"
+                                            y="288"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="32"
+                                            rx="20"
+                                            ry="20"
+                                        />
+                                    </svg>
                                 </div>
                             </template>
                         </a-radio>
                         <a-radio value="list">
                             <template #radio="{ checked }">
                                 <div :class="['view-item', checked ? 'view-item-active' : '']">
-                                    <Svg
-                                        name="https://api.iconify.design/pixelarticons/list.svg"
-                                        :width="22"
-                                        :height="22"
-                                        :color="checked ? 'rgb(var(--primary-6))' : '#888888'"
-                                    ></Svg>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="1em"
+                                        height="1em"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M6 6H4v2h2V6zm14 0H8v2h12V6zM4 11h2v2H4v-2zm16 0H8v2h12v-2zM4 16h2v2H4v-2zm16 0H8v2h12v-2z"
+                                        />
+                                    </svg>
                                 </div>
                             </template>
                         </a-radio>
@@ -72,8 +130,8 @@
             </div>
         </div>
         <!-- 表格主体 -->
-        <div :class="['table', props.allowFlatten && flattenType === 'app' ? 'app-list' : '']">
-            <template v-if="!props.allowFlatten || flattenType === 'list'">
+        <div :class="['table', tableConfig.allowFlatten && flattenType === 'app' ? 'app-list' : '']">
+            <template v-if="!tableConfig.allowFlatten || flattenType === 'list'">
                 <a-table
                     ref="baseTable"
                     v-model:selectedKeys="selectedKeys"
@@ -81,7 +139,7 @@
                     :data="privateList"
                     :pagination="false"
                     :stripe="true"
-                    v-bind="privateTableConfig.tableProps"
+                    v-bind="privateTableConfig.arcoProps"
                     @selection-change="onSelectionChange"
                 >
                     <template #columns>
@@ -158,7 +216,7 @@
             </template>
         </div>
         <!-- 表格底部 -->
-        <div v-if="privateTableConfig?.tableProps?.pagination !== false || enableSelection" class="footer">
+        <div v-if="enableFooter" class="footer">
             <div class="bat-wrapper">
                 <template v-if="enableSelection">
                     <a-checkbox
@@ -171,20 +229,20 @@
                     </a-checkbox>
                     <span class="bats-slot">
                         已选 {{ selectedKeys?.length
-                        }}<template v-if="props.selectLimit">/ {{ props.selectLimit }}</template> 个
+                        }}<template v-if="tableConfig.selectLimit">/ {{ tableConfig.selectLimit }}</template> 个
                     </span>
                 </template>
                 <template v-if="batsShow">
                     <a-space>
-                        <template v-for="(item, index) in privateTableConfig?.bats">
+                        <template v-for="(item, index) in privateTableConfig?.blBtns">
                             <a-button
                                 v-if="handleCheckBtnIf(item)"
                                 :key="index"
                                 :type="item.type || 'primary'"
                                 :status="item.status || 'normal'"
-                                :disabled="handleCheckBtnDidsable(item) || item.loading"
+                                :disabled="handleCheckBtnDidsable(item) || item.loading || false"
                                 :icon="item.icon"
-                                :loading="item.loading"
+                                :loading="item.loading || false"
                                 @click="handleExtraButtonClick(item)"
                                 >{{ item.label }}</a-button
                             >
@@ -193,10 +251,10 @@
                 </template>
             </div>
             <a-pagination
-                v-if="privateTableConfig?.tableProps?.pagination !== false"
+                v-if="privateTableConfig?.arcoProps?.pagination !== false"
                 v-model:current="privatePage"
                 v-model:pageSize="privateSize"
-                :page-size-options="privateSizeList"
+                :page-size-options="tableConfig.sizeList || [10, 20, 30, 40, 50]"
                 :total="total"
                 show-total
                 show-page-size
@@ -208,7 +266,7 @@
 </template>
 
 <script lang="ts" setup>
-import { _Btn, _TableColumn, _TableConfig } from "@ap/utils/types";
+import { _Btn, _TableColumn, _TableConfig, _TableReq } from "@ap/utils/types";
 import { BaseTableColunmBtn } from "@ap/utils/tableHelper";
 import {
     handleCheckBtnIf,
@@ -219,9 +277,8 @@ import {
     arrIncludes
 } from "./util";
 import { dateHelper } from "@ap/utils/dateHelper";
-import { cloneDeep, debounce } from "lodash-es";
+import { cloneDeep, debounce, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
-import { Svg } from "@ap/components/Svg";
 import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount } from "vue";
 
 defineOptions({
@@ -237,49 +294,18 @@ const props = withDefaults(
         //复选框默认选中key集合
         defaultSelectionKeys?: number[] | string[];
         //构造请求
-        req?: {
-            fn: (params: any) => Promise<any>;
-            params?: Record<string, any>;
-        };
+        req?: _TableReq;
         //表格配置
         tableConfig: _TableConfig;
-        //数据存在的key，比如返回数据是{code:200,data:{rows:[],total:100},msg:'xxx'}，则传递rows，如果还在rows下面层级，则传递rows.xxx.xx.xx，依此递归
-        rowKey?: string;
-        //总数key
-        totalKey?: string;
-        //焦点key，防止多个列表共存的情况下，重复加载（传入active的时候，必须同时传入key）
-        active?: string | number;
-        //分页数量
-        sizeList?: number[];
-        //当前分页
-        size?: number;
         //双向绑定,list数据
         list?: any[];
-        //分页page变量
-        pageKey?: string;
-        //分页size变量
-        sizeKey?: string;
-        //最大选择数量
-        selectLimit?: number;
-        //是否允许平铺
-        allowFlatten?: boolean;
     }>(),
     {
-        selectLimit: 0,
-        pagination: true,
-        defaultSelectionKeys: () => [],
-        req: undefined,
         filterConfig: undefined,
         filterData: () => ({}),
-        rowKey: "rows",
-        totalKey: "total",
-        sizeList: () => [10, 20, 30, 40, 50],
-        size: 20,
-        active: undefined,
-        list: () => [],
-        pageKey: "page",
-        sizeKey: "size",
-        allowFlatten: false
+        defaultSelectionKeys: () => [],
+        req: undefined,
+        list: () => []
     }
 );
 
@@ -292,9 +318,31 @@ const emits = defineEmits<{
 }>();
 
 //内部tableConfig配置文件
-const privateTableConfig = computed(() => {
-    const cloneTableConfig = cloneDeep(props.tableConfig);
-    return cloneTableConfig;
+const privateTableConfig = computed<_TableConfig>(() => {
+    const defaultTableConfig: _TableConfig = {
+        pageKey: "page",
+        sizeKey: "size",
+        sizeList: [10, 20, 30, 40, 50],
+        size: 20,
+        active: undefined,
+        rowKey: "rows",
+        totalKey: "total",
+        allowFlatten: false,
+        selectLimit: 0,
+        arcoProps: {
+            rowKey: "id"
+        }
+    };
+    if (props.tableConfig.autoMaxHeight) {
+        defaultTableConfig.arcoProps = {
+            ...defaultTableConfig.arcoProps,
+            scroll: {
+                ...defaultTableConfig.arcoProps.scroll,
+                y: tableHeight.value
+            }
+        };
+    }
+    return merge(cloneDeep(defaultTableConfig), cloneDeep(props.tableConfig));
 });
 const flattenType = ref<"app" | "list">("app");
 //是否结束
@@ -320,43 +368,50 @@ const tableHeight = ref(0);
 //表格实例
 const baseTable = ref();
 
-const privateSizeList = computed(() => {
-    return props.sizeList;
-});
-
 //是否开启多选
 const enableSelection = computed(() => {
-    return !!privateTableConfig.value?.tableProps?.rowSelection;
+    return !!privateTableConfig.value?.arcoProps?.rowSelection;
+});
+
+//是否显示footer
+const enableFooter = computed(() => {
+    return privateTableConfig.value?.arcoProps?.pagination !== false || enableSelection.value;
 });
 
 /** 是否显示左下角按钮组 */
 const batsShow = computed(() => {
-    if (!privateTableConfig.value?.bats) {
+    if (!privateTableConfig.value?.blBtns) {
         return false;
     }
-    return privateTableConfig.value.bats.length > 0;
+    return privateTableConfig.value.blBtns.length > 0;
 });
 
 const slots = useSlots();
 
 const topShow = computed(() => {
-    return tabsShow.value || btnsShow.value || slots["left-btns"] || slots["btns-slot"] || props.allowFlatten;
+    return (
+        tabsShow.value ||
+        btnsShow.value ||
+        slots["left-btns"] ||
+        slots["btns-slot"] ||
+        privateTableConfig.value.allowFlatten
+    );
 });
 
 /** 是否显示左上角切卡组 */
 const tabsShow = computed(() => {
-    if (!privateTableConfig.value?.tabs) {
+    if (!privateTableConfig.value?.tlBtns) {
         return false;
     }
-    return privateTableConfig.value.tabs.length > 0;
+    return privateTableConfig.value.tlBtns.length > 0;
 });
 
 /** 是否显示右上角按钮组 */
 const btnsShow = computed(() => {
-    if (!privateTableConfig.value?.btns) {
+    if (!privateTableConfig.value?.trBtns) {
         return false;
     }
-    return privateTableConfig.value.btns.length > 0;
+    return privateTableConfig.value.trBtns.length > 0;
 });
 
 /** 生成新的字典对象 */
@@ -384,7 +439,7 @@ const dictionaryObj = computed(() => {
     return dicMap;
 });
 const tableRowKey = computed(() => {
-    return privateTableConfig.value?.tableProps?.rowKey || "id";
+    return privateTableConfig.value?.arcoProps?.rowKey || "id";
 });
 //选中的keys
 const selectedKeys = ref<string[] | number[]>([]);
@@ -416,6 +471,7 @@ watch(
 /** 重新加载之后，检测复选disabled */
 watch(loading, (newVal) => {
     if (!newVal) {
+        setTableHeight();
         if (props.defaultSelectionKeys.length) {
             selectedKeys.value = Array.from(new Set([...(selectedKeys.value as any[]), ...props.defaultSelectionKeys]));
         }
@@ -426,11 +482,7 @@ watch(loading, (newVal) => {
 const checkSelectedDisabled = (): void => {
     if (props.tableConfig.disableSelectedRow) {
         privateList.value.forEach((item) => {
-            if ((props.defaultSelectionKeys as any[]).includes(item[tableRowKey.value])) {
-                item.disabled = true;
-            } else {
-                item.disabled = false;
-            }
+            item.disabled = (props.defaultSelectionKeys as any[]).includes(item[tableRowKey.value]);
         });
     }
 };
@@ -465,9 +517,13 @@ const listMore = async (refresh = false): Promise<void> => {
         console.warn("当前base-table未传入req方法，请注意");
         return;
     }
-    if (vnodeKey.value && props.active && vnodeKey.value !== props.active) {
+    if (vnodeKey.value && privateTableConfig.value.active && vnodeKey.value !== privateTableConfig.value.active) {
         //如果传入了key或者active，则进行匹配校验，非活动状态的base-list组件，拒绝请求
-        console.warn(`base-table组件当前未激活，请注意传入的key：${String(vnodeKey.value)}和active：${props.active}`);
+        console.warn(
+            `base-table组件当前未激活，请注意传入的key：${String(vnodeKey.value)}和active：${
+                privateTableConfig.value.active
+            }`
+        );
         return;
     }
     if (refresh) {
@@ -482,16 +538,16 @@ const listMore = async (refresh = false): Promise<void> => {
         loading.value = true;
         error.value = false;
         const params = { ...props.req?.params };
-        if (props.pageKey) {
-            params[props.pageKey] = privatePage.value;
+        if (privateTableConfig.value.pageKey) {
+            params[privateTableConfig.value.pageKey] = privatePage.value;
         }
-        if (props.sizeKey) {
-            params[props.sizeKey] = privateSize.value;
+        if (privateTableConfig.value.sizeKey) {
+            params[privateTableConfig.value.sizeKey] = privateSize.value;
         }
         const res = await props?.req.fn(params);
         // 仅开启分页的情况才去设置总数
-        if (privateTableConfig.value?.tableProps?.pagination !== false) {
-            const totalValue = Number(res[props.totalKey || "total"]);
+        if (privateTableConfig.value?.arcoProps?.pagination !== false) {
+            const totalValue = Number(res[privateTableConfig.value.totalKey || "total"]);
             total.value = Number.isNaN(totalValue) ? 0 : totalValue;
         }
         loading.value = false;
@@ -502,11 +558,11 @@ const listMore = async (refresh = false): Promise<void> => {
         // 传递每次请求的数据到外部,用于数据二次封装和外部循环逻辑
         emits("export", res);
         let _data = res;
-        if (props.rowKey) {
-            const responseKeyArr = props.rowKey.split(".");
+        if (privateTableConfig.value.rowKey) {
+            const responseKeyArr = privateTableConfig.value.rowKey.split(".");
             responseKeyArr.forEach((item) => {
                 if (_data[item] === undefined) {
-                    throw new Error(`row-key：${props.rowKey}不存在，请检查`);
+                    throw new Error(`row-key：${privateTableConfig.value.rowKey}不存在，请检查`);
                 }
                 _data = _data[item];
             });
@@ -558,7 +614,9 @@ const setTableHeight = (): void => {
             return;
         }
         const table = baseTable.value;
-        tableHeight.value = window.innerHeight - (table.$el as HTMLElement).offsetTop - 65;
+        const footerHeight = enableFooter.value ? 65 : 0;
+        //最后50为一个buffer值，20分别是padding和margin
+        tableHeight.value = window.innerHeight - table.$el.getBoundingClientRect().top - 20 - 20 - 50 - footerHeight;
     });
 };
 
@@ -569,51 +627,6 @@ const setDictionaryValue = (prop: string, value: string | number): string | numb
     }
     return dictionaryObj.value[prop][value];
 };
-/** 单元格点击事件 */
-// const rowClick = (data: Record<string, any>): void => {
-//     emits("rowClick", data);
-//     if (data.disabled) {
-//         return;
-//     }
-//     const clickId = data[tableRowKey.value];
-//     if (enableSelection.value) {
-//         const index = selectedKeys.value?.findIndex((item) => item === clickId);
-//         if (index !== undefined) {
-//             if (index === -1) {
-//                 (selectedKeys.value as any[])?.push(clickId);
-//             } else {
-//                 selectedKeys.value?.splice(index, 1);
-//             }
-//         }
-//     }
-// };
-
-// watch(
-//     selectedKeys,
-//     () => {
-//         onSelectionChange();
-//     },
-//     { deep: true }
-// );
-
-/** 复选框变更 */
-// const onSelectionChange = (): void => {
-//     const selectionData = privateList.value.filter((item) =>
-//         (selectedKeys.value as any[]).includes(item[tableRowKey.value])
-//     );
-//     emits("selectionChange", selectionData);
-//     checkSelectedDisabled();
-//     nextTick(() => {
-//         const includeLength = arrIncludes(
-//             selectedKeys.value,
-//             privateList.value.map((item) => item[tableRowKey.value])
-//         );
-//         footerCheckAllFlag.value = includeLength > 0 && includeLength === privateList.value.length;
-//         //计算部分选中状态的时候，需要过滤已禁用的数据
-//         footerIndeterminateFlag.value =
-//             includeLength - props.defaultSelectionKeys.length > 0 && includeLength < privateList.value.length;
-//     });
-// };
 
 function onSelectionChange(v: (string | number)[]) {
     const selectionData = privateList.value.filter((item) => v.includes(item[tableRowKey.value]));
@@ -673,8 +686,8 @@ defineExpose({
 });
 
 onMounted(() => {
-    if (props.size) {
-        privateSize.value = props.size;
+    if (privateTableConfig.value.size) {
+        privateSize.value = privateTableConfig.value.size;
     }
     setTableHeight();
     window.onresize = debounce(setTableHeight, 300);
@@ -759,9 +772,18 @@ onBeforeUnmount(() => {
         width: 32px;
         height: 32px;
         border: 1px solid var(--color-neutral-3);
+        svg {
+            width: 22px;
+            height: 22px;
+            vertical-align: -0.15rem;
+            color: #888888;
+        }
     }
     .view-item-active {
         border: 1px solid rgb(var(--primary-6));
+        svg {
+            color: rgb(var(--primary-6));
+        }
     }
 }
 </style>

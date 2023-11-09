@@ -30,6 +30,7 @@ const emits = defineEmits<{
     (e: "update:value", data: Record<string, any>): void;
     (e: "update:visible", data: boolean): void;
     (e: "ok"): void;
+    (e: "cancel"): void;
 }>();
 
 const computedVisible = computed({
@@ -47,7 +48,6 @@ const privateModalConfig = computed<any>(() => {
         alignCenter: false,
         titleAlign: "start",
         top: "10vh",
-        okText: "确定",
         width: "700px"
     };
     return { ...defaultConfig, ...props.config };
@@ -63,6 +63,7 @@ async function handleOk() {
 }
 
 function handleCancel() {
+    emits("cancel");
     onClose();
 }
 

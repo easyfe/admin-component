@@ -15,7 +15,9 @@ import type {
     YearPicker,
     QuarterPicker,
     WeekPicker,
-    Textarea
+    Textarea,
+    Cascader,
+    CascaderOption
 } from "@arco-design/web-vue";
 // import { Override } from "types";
 
@@ -66,6 +68,9 @@ export type BaseFormCheckbox = Partial<CheckboxProps>;
 //下拉框
 export type BaseFormSelect = BaseFormExtra & Partial<SelectProps>;
 export type BaseFormSelectOptions = Partial<SelectOption>;
+//级联选择器
+export type BaseFormCascader = BaseFormExtra & InstanceType<typeof Cascader>["$props"];
+export type BaseFormCascaderOptions = Partial<CascaderOption>;
 //切换框
 export type BaseFormSwitch = BaseFormExtra & InstanceType<typeof Switch>["$props"];
 //日期选择框
@@ -137,17 +142,38 @@ export type _TableColumn = {
 
 /** 表格配置定义 */
 export type _TableConfig = {
+    //是否自动最大高度
+    autoMaxHeight?: boolean;
     /** 左上角标签 */
-    tabs?: _Tabs;
+    tlBtns?: _Tabs;
     /** 右上角按钮 */
-    btns?: _Btn[];
+    trBtns?: _Btn[];
     /** 左下角按钮 */
-    bats?: _Btn[];
+    blBtns?: _Btn[];
     /** 是否禁用选中行 */
     disableSelectedRow?: boolean;
-    tableProps?: InstanceType<typeof Table>["$props"];
     /** 列表组 */
     columns?: _TableColumn[];
+    //数据存在的key，比如返回数据是{code:200,data:{rows:[],total:100},msg:'xxx'}，则传递rows，如果还在rows下面层级，则传递rows.xxx.xx.xx，依此递归
+    rowKey?: string;
+    //总数key
+    totalKey?: string;
+    //焦点key，防止多个列表共存的情况下，重复加载（传入active的时候，必须同时传入key）
+    active?: string | number;
+    //分页数量
+    sizeList?: number[];
+    //当前分页
+    size?: number;
+    //分页page变量
+    pageKey?: string;
+    //分页size变量
+    sizeKey?: string;
+    //最大选择数量
+    selectLimit?: number;
+    //是否允许平铺
+    allowFlatten?: boolean;
+    //表格props
+    arcoProps: InstanceType<typeof Table>["$props"];
 };
 
 /** 表格请求事件定义 */

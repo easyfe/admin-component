@@ -5,8 +5,7 @@ import { _Btn } from "@ap/utils/types";
 /** 检查右上角按钮是否显示 */
 export function handleCheckBtnIf(btn: _Btn): boolean {
     if (typeHelper.isBoolean(btn.if)) {
-        const e = btn.if as boolean;
-        return e;
+        return btn.if as boolean;
     } else if (typeHelper.isFunction(btn.if)) {
         const fn = btn.if as () => boolean;
         return fn();
@@ -20,8 +19,7 @@ export function handleCheckBtnIf(btn: _Btn): boolean {
 /** 检查右上角按钮是否禁用 */
 export function handleCheckBtnDidsable(btn: _Btn): boolean {
     if (typeHelper.isBoolean(btn.disabled)) {
-        const e = btn.disabled as boolean;
-        return e;
+        return btn.disabled as boolean;
     } else if (typeHelper.isFunction(btn.disabled)) {
         const fn = btn.disabled as () => boolean;
         return fn();
@@ -35,8 +33,7 @@ export function handleCheckBtnDidsable(btn: _Btn): boolean {
 /** 检查操作列的按钮是否显示 */
 export function handleCheckColumnBtnIf(item: Record<string, any>, index: number, btn: BaseTableColunmBtn): boolean {
     if (typeHelper.isBoolean(btn.if)) {
-        const e = btn.if as boolean;
-        return e;
+        return btn.if as boolean;
     } else if (typeHelper.isFunction(btn.if)) {
         const fn = btn.if as (item: Record<string, any>, index: number) => boolean;
         return fn(item, index);
@@ -55,8 +52,7 @@ export function handleCheckColumnBtnDidsable(
     btn: BaseTableColunmBtn
 ): boolean {
     if (typeHelper.isBoolean(btn.disabled)) {
-        const e = btn.disabled as boolean;
-        return e;
+        return btn.disabled as boolean;
     } else if (typeHelper.isFunction(btn.disabled)) {
         const fn = btn.disabled as (item: Record<string, any>, index: number) => boolean;
         return fn(item, index);
@@ -71,8 +67,7 @@ export function handleCheckColumnBtnDidsable(
 /** 设置操作列按钮的label */
 export function handleSetColumnBtnLabel(item: Record<string, any>, index: number, btn: BaseTableColunmBtn): string {
     if (typeHelper.isString(btn.label)) {
-        const e = btn.label as string;
-        return e;
+        return btn.label as string;
     } else if (typeHelper.isFunction(btn.label)) {
         const fn = btn.label as (item: Record<string, any>, index: number) => string;
         return fn(item, index);

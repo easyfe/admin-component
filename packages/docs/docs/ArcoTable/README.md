@@ -29,29 +29,31 @@
 |     filterConfig     |         筛选表单配置         |                Record<string,any>[]                |   -    |          `[]`          |    否    |
 |      filterData      |            筛选值            | { tabsData?: string ,number } &Record<string, any> |   -    |          `{}`          |    否    |
 | defaultSelectionKeys |   复选框默认选中 key 集合    |                 number[]\|string[]                 |   -    |          `[]`          |    否    |
-|         req          |           构造请求           |     `{fn:Function,params:Record<string,any>}`      |   -    |          `[]`          |    否    |
-|     tableConfig      |           表格配置           |                 Record<string,any>                 |   -    |          `[]`          |    否    |
-|        rowKey        |       请求结果列表 key       |                       string                       |   -    |          `[]`          |    否    |
-|       totalKey       |           总数 key           |                       string                       |   -    |          `[]`          |    否    |
-|        active        | 焦点 key，多个表格共存时传入 |                       string                       |   -    |      `undefined`       |    否    |
-|       sizeList       |           分页筛选           |                      number[]                      |   -    | `[10, 20, 30, 40, 50]` |    否    |
-|         size         |         当前分页数量         |                       number                       |   -    |          `20`          |    否    |
+|         req          |           构造请求           |     TableReq      |   -    |          `[]`          |    否    |
+|     tableConfig      |           表格配置           |                 TableConfig                 |   -    |          `[]`          |    否    |
 |  list**(v-model)**   |         双向绑定数据         |                       any[]                        |   -    |          `[]`          |    否    |
-|       pageKey        |        分页 page 变量        |                       string                       |   -    |         `page`         |    否    |
-|       sizeKey        |        分页 size 变量        |                       string                       |   -    |         `size`         |    否    |
-|     selectLimit      |         复选最大数量         |                       number                       |   -    |          `0`           |    否    |
-|     allowFlatten     |        平铺+列表布局         |                      boolean                       |   -    |        `false`         |    否    |
 
 ### TableConfig
 
 | 参数               | 说明                                                           | 类型                                   | 默认值 | 必填 |
 | ------------------ | -------------------------------------------------------------- | -------------------------------------- | ------ | ---- |
-| tabs               | 左上角的选项卡                                                 | \_Tabs                                 | -      | 否   |
-| btns               | 右上角的按钮数组                                               | \_Btn[]                                | -      | 否   |
-| bats               | 左下角的按钮数组                                               | \_Btn[]                                | -      | 否   |
-| disableSelectedRow | 指定是否禁用选择行                                             | boolean                                | -      | 否   |
-| tableProps         | [arco-table 配置](https://arco.design/vue/component/table#API) | `InstanceType<typeof Table>["$props"]` | -      | 否   |
-| columns            | 表格的列列表                                                   | \_TableColumn[]                        | -      | 否   |
+| autoMaxHeight      | 是否自动最大高度                                               | boolean                                | -      | 否   |
+| tlBtns             | 左上角标签                                                     | \_Tabs                                 | -      | 否   |
+| trBtns             | 右上角按钮                                                     | \_Btn[]                                | -      | 否   |
+| blBtns             | 左下角按钮                                                     | \_Btn[]                                | -      | 否   |
+| disableSelectedRow | 是否禁用选中行                                                 | boolean                                | -      | 否   |
+| columns            | 列表组                                                         | \_TableColumn[]                        | -      | 否   |
+| rowKey             | 数据存在的key                                                   | string                                 | -      | 否   |
+| totalKey           | 总数key                                                         | string                                 | -      | 否   |
+| active             | 焦点key                                                         | string \| number                       | -      | 否   |
+| sizeList           | 分页数量                                                       | number[]                               | -      | 否   |
+| size               | 当前分页                                                       | number                                 | -      | 否   |
+| pageKey            | 分页page变量                                                    | string                                 | -      | 否   |
+| sizeKey            | 分页size变量                                                    | string                                 | -      | 否   |
+| selectLimit        | 最大选择数量                                                   | number                                 | -      | 否   |
+| allowFlatten       | 是否允许平铺                                                   | boolean                                | -      | 否   |
+| arcoProps          | 表格props                                                       | `InstanceType<typeof Table>["$props"]` | -      | 是   |
+
 
 ### TableReq
 

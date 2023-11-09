@@ -1,12 +1,5 @@
 <template>
-    <a-modal
-        :visible="computedVisible"
-        :on-before-ok="handleOk"
-        top="10vh"
-        ok-text="确定"
-        v-bind="privateModalConfig"
-        @cancel="handleCancel"
-    >
+    <arco-modal :visible="computedVisible" :config="props.modalConfig" :ok="handleOk" @cancel="handleCancel">
         <div class="base-modal-content">
             <arco-form ref="modalForm" v-model="privateFormData" :config="props.formConfig">
                 <template v-for="(_, slotName) in $slots" #[slotName]>
@@ -14,12 +7,13 @@
                 </template>
             </arco-form>
         </div>
-    </a-modal>
+    </arco-modal>
 </template>
 <script setup lang="ts">
 import { formHelper } from "@ap/utils/formHelper";
 import type { Modal } from "@arco-design/web-vue";
 import { ArcoForm } from "@ap/components/ArcoForm";
+import { ArcoModal } from "@ap/components/ArcoModal";
 import { ref, computed, watch } from "vue";
 
 defineOptions({
@@ -34,7 +28,7 @@ const props = withDefaults(
         formConfig?: Record<string, any>[]; //表单配置
         //以下用于函数式调用
         destroy?: () => void; //销毁方法
-        ok?: (data: Record<string, any>) => Promise<void>; //确定方法
+        ok?: (data: Record<string, any>) => Promise<void> | void; //确定方法
         change?: (data: Record<string, any>) => void; //表单数据变化
     }>(),
     {
@@ -61,18 +55,6 @@ const computedVisible = computed(() => {
     return fnVisible.value && props.visible;
 });
 
-const privateModalConfig = computed<any>(() => {
-    const defaultConfig = {
-        maskClosable: false,
-        alignCenter: false,
-        titleAlign: "start",
-        top: "10vh",
-        okText: "确定",
-        width: "700px"
-    };
-    return { ...defaultConfig, ...props.modalConfig };
-});
-
 const privateFormData = ref({});
 
 watch(
@@ -96,6 +78,15 @@ watch(
     },
     {
         deep: true
+    }
+);
+
+watch(
+    () => computedVisible.value,
+    (v) => {
+        if (v) {
+            modalForm.value.clearValidate();
+        }
     }
 );
 

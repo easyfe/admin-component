@@ -1,6 +1,6 @@
 <template>
     <form-item>
-        <a-switch v-model="model" v-bind="$attrs" />
+        <a-cascader v-model="model" v-bind="$attrs"> </a-cascader>
     </form-item>
 </template>
 <script lang="ts" setup>
@@ -8,19 +8,24 @@ import { computed } from "vue";
 import FormItem from "../form-item/index.vue";
 
 defineOptions({
-    name: "Switch"
+    name: "Cascader"
 });
 
 const props = withDefaults(
     defineProps<{
-        modelValue: any;
+        labelKey?: string;
+        valueKey?: string;
+        modelValue?: string | number | number[] | string[];
     }>(),
     {
-        modelValue: false
+        labelKey: "label",
+        valueKey: "value",
+        options: [] as any,
+        modelValue: ""
     }
 );
 const emits = defineEmits<{
-    (e: "update:modelValue", data: boolean): void;
+    (e: "update:modelValue", data: any): void;
 }>();
 
 const model = computed({

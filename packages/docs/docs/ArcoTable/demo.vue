@@ -5,9 +5,6 @@
             :table-config="getConfig"
             :filter-config="filterConfig"
             :req="getData"
-            page-key="_page"
-            size-key="_size"
-            row-key=""
         >
             <template #s1>
                 <a-table-column title="这是slot">
@@ -43,8 +40,11 @@ const filterConfig = computed(() => {
 
 const getConfig = computed(() => {
     return tableHelper.create({
+        pageKey: "_page",
+        sizeKey: "_size",
+        rowKey: "",
         disableSelectedRow: true,
-        tableProps: {
+        arcoProps: {
             rowKey: "id",
             bordered: false,
             rowSelection: {
@@ -52,7 +52,7 @@ const getConfig = computed(() => {
                 showCheckedAll: true
             }
         },
-        bats: [
+        trBtns: [
             {
                 label: "编辑",
                 type: "primary"
@@ -62,7 +62,7 @@ const getConfig = computed(() => {
                 status: "danger"
             }
         ],
-        tabs: [
+        tlBtns: [
             {
                 label: "全部",
                 value: "0"
@@ -76,7 +76,7 @@ const getConfig = computed(() => {
                 value: "2"
             }
         ],
-        btns: [
+        blBtns: [
             {
                 label: "新增",
                 type: "primary"

@@ -120,7 +120,7 @@ onMounted(() => {
     .form-items {
         .section {
             height: 42px;
-            background-color: rgb(var(--gray-1));
+            background-color: rgb(var(--gray-2));
             display: flex;
             align-items: center;
             padding-left: 24px;

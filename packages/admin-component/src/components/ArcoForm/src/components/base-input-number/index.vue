@@ -15,13 +15,15 @@ defineOptions({
     name: "InputNumber"
 });
 
-const props = defineProps({
-    modelValue: {
-        type: Number,
-        default: 0,
-        min: Number
+const props = withDefaults(
+    defineProps<{
+        modelValue: any;
+    }>(),
+    {
+        modelValue: 0
     }
-});
+);
+
 const emits = defineEmits<{
     (e: "update:modelValue", data: any): void;
 }>();

@@ -1,12 +1,5 @@
 <template>
-    <a-modal
-        :visible="computedVisible"
-        :on-before-ok="handleOk"
-        top="10vh"
-        ok-text="确定"
-        v-bind="privateModalConfig"
-        @cancel="handleCancel"
-    >
+    <arco-modal :visible="computedVisible" :config="props.modalConfig" :ok="handleOk" @cancel="handleCancel">
         <div class="base-modal-content">
             <arco-table
                 ref="baseModalTable"
@@ -21,12 +14,13 @@
                 </template>
             </arco-table>
         </div>
-    </a-modal>
+    </arco-modal>
 </template>
 <script setup lang="ts">
 import type { Modal } from "@arco-design/web-vue";
 // import { cloneDeep } from "lodash-es";
 import { ArcoTable } from "@ap/components/ArcoTable";
+import { ArcoModal } from "@ap/components/ArcoModal";
 import { ref, computed, watch, watchEffect } from "vue";
 
 defineOptions({
@@ -42,7 +36,7 @@ const props = withDefaults(
         //以下用于函数式调用
         export?: (data: Record<string, any>) => void;
         destroy?: () => void;
-        ok?: (data: any[]) => Promise<void>;
+        ok?: (data: any[]) => Promise<void> | void;
         filterChange?: (data: Record<string, any>) => void; //表单数据变化
     }>(),
     {
@@ -76,18 +70,6 @@ const computedVisible = computed(() => {
     return fnVisible.value && props.visible;
 });
 
-const privateModalConfig = computed<any>(() => {
-    const defaultConfig = {
-        maskClosable: false,
-        alignCenter: false,
-        titleAlign: "start",
-        top: "10vh",
-        okText: "确定",
-        width: "700px"
-    };
-    return { ...defaultConfig, ...props.modalConfig };
-});
-
 //props里的tableConfig.filterData 需要一直同步给getData的req事件
 
 //arco-table内，是监听props.filterData、props.req值发生变化的时候，重新发起了请求获取数据。
@@ -97,7 +79,7 @@ const privateModalConfig = computed<any>(() => {
 //在这个计算方法内，通过引用关系的方式，让arco-table的filter-data和props里的tableConfig，双向绑定
 const privateTableConfig = computed<any>(() => {
     const defaultConfig = {
-        tableProps: {
+        arcoProps: {
             rowKey: "id"
         }
     };
@@ -124,7 +106,7 @@ watch(
             baseModalTable.value?.refresh();
             selectionKeys.value = props.defaultSelected?.map((item: any) => {
                 if (typeof item === "object") {
-                    return item[props.tableConfig?.tableConfig.tableProps?.rowKey || "id"];
+                    return item[props.tableConfig?.tableConfig.arcoProps?.rowKey || "id"];
                 } else {
                     return item;
                 }

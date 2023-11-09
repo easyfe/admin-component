@@ -168,6 +168,7 @@ const removeIcon = (): void => {
                 justify-content: center;
                 color: #c0ccda;
                 cursor: pointer;
+                user-select: none;
 
                 &:hover {
                     border-color: #1890ff;
