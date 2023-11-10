@@ -1,6 +1,6 @@
 <template>
     <form-item>
-        <a-input v-model.trim="model" v-bind="$attrs">
+        <a-input v-bind="$attrs" @input="onInput" @clear="onClear">
             <template v-if="$attrs.prepend" #prepend> {{ $attrs.prepend }} </template>
             <template v-if="$attrs.append" #append> {{ $attrs.append }} </template>
         </a-input>
@@ -9,17 +9,23 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import FormItem from "../form-item/index.vue";
+import { debounce } from "lodash-es";
 
 defineOptions({
     name: "Input"
 });
 
-const props = defineProps({
-    modelValue: {
-        type: String,
-        default: ""
+const props = withDefaults(
+    defineProps<{
+        modelValue: string;
+        debounce?: number;
+    }>(),
+    {
+        modelValue: "",
+        debounce: undefined
     }
-});
+);
+
 const emits = defineEmits<{
     (e: "update:modelValue", data: any): void;
 }>();
@@ -32,5 +38,21 @@ const model = computed({
         emits("update:modelValue", newVal);
     }
 });
+
+function onInput(e: string) {
+    if (props.debounce) {
+        debounceChange(e);
+        return;
+    }
+    model.value = e;
+}
+
+const debounceChange = debounce((e) => {
+    model.value = e;
+}, props.debounce);
+
+function onClear() {
+    model.value = "";
+}
 </script>
 <style lang="less" scoped></style>

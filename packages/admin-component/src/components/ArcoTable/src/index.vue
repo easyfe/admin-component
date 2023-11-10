@@ -2,7 +2,7 @@
     <div class="efe-arco-table">
         <!-- 顶部筛选器 -->
         <div v-if="props.filterConfig?.length" class="filter">
-            <arco-form v-model="privateFilterData" :config="props.filterConfig" layout="row"></arco-form>
+            <arco-form v-model="privateFilterData" :config="privateFilterConfig" layout="row"></arco-form>
         </div>
         <div v-if="topShow" class="top">
             <!-- table左上角切换tab -->
@@ -317,6 +317,15 @@ const emits = defineEmits<{
     (e: "rowClick", value: any): void;
 }>();
 
+const privateFilterConfig = computed(() => {
+    props.filterConfig?.forEach((item) => {
+        if (["input", "inputNumber"].includes(item.inputType) && !item.debounce) {
+            item.debounce = 500;
+        }
+    });
+    return props.filterConfig || [];
+});
+
 //内部tableConfig配置文件
 const privateTableConfig = computed<_TableConfig>(() => {
     const defaultTableConfig: _TableConfig = {
@@ -451,7 +460,7 @@ watch(
         if (loading.value) {
             return;
         }
-        debounceListMore();
+        listMore(true);
     },
     {
         deep: true
@@ -486,11 +495,6 @@ const checkSelectedDisabled = (): void => {
         });
     }
 };
-/** 定义防抖加载 */
-const debounceListMore = debounce(() => {
-    listMore(true);
-}, 800);
-
 /** 切换全选状态 */
 const haneleClickChoose = (value: boolean | (string | number | boolean)[]): void => {
     baseTable.value.selectAll(value);

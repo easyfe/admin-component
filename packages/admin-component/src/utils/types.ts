@@ -45,6 +45,7 @@ export type BaseFormInput = BaseFormExtra &
     InstanceType<typeof Input>["$props"] & {
         append?: string;
         prepend?: string;
+        debounce?: number;
     };
 //多文本输入框扩展
 export type BaseFormTextarea = BaseFormExtra & InstanceType<typeof Textarea>["$props"];
@@ -53,6 +54,7 @@ export type BaseFormInputNumber = BaseFormExtra &
     InstanceType<typeof InputNumber>["$props"] & {
         append?: string;
         prepend?: string;
+        debounce?: number;
     };
 //多选扩展
 type CheckboxGroupProps = {
