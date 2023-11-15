@@ -50,7 +50,8 @@ const getSlotStyle = computed(() => {
         time: "200px",
         editor: "800px",
         select: "400px",
-        cascader: "400px"
+        cascader: "400px",
+        treeSelect: "400px"
     };
     return {
         width: defaultWidth[attrs.inputType] || "100%"

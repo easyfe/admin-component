@@ -1,6 +1,6 @@
 <template>
     <form-item>
-        <a-select v-model="model" v-bind="$attrs"> </a-select>
+        <a-tree-select v-model="model" v-bind="$attrs"> </a-tree-select>
     </form-item>
 </template>
 <script lang="ts" setup>
@@ -16,6 +16,7 @@ const props = withDefaults(
         modelValue?: string | number | number[] | string[];
     }>(),
     {
+        options: [] as any,
         modelValue: ""
     }
 );

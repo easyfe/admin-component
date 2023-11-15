@@ -17,10 +17,9 @@ import type {
     WeekPicker,
     Textarea,
     Cascader,
-    CascaderOption
+    CascaderOption,
+    TreeSelect
 } from "@arco-design/web-vue";
-// import { Override } from "types";
-
 /** form表单元素基础配置 */
 export type BaseFormExtra = {
     clearable?: boolean;
@@ -90,13 +89,17 @@ export type BaseFormWeekPicker = BaseFormDate & InstanceType<typeof WeekPicker>[
 export type BaseFormRangePicker = BaseFormDate & InstanceType<typeof RangePicker>["$props"];
 //时间选择框
 export type BaseFormTime = BaseFormExtra & InstanceType<typeof TimePicker>["$props"];
-
+//上传组件
 export type BaseFormUpload = BaseFormExtra & {
     remove?: boolean;
     independent?: boolean;
     limit?: number;
     disabled?: boolean;
 };
+//树选择器
+export type BaseTreeSelect = BaseFormExtra & InstanceType<typeof TreeSelect>["$props"];
+
+//=====================以下为table相关=====================
 
 import { TableSortable, ButtonProps } from "@arco-design/web-vue";
 import type { Table } from "@arco-design/web-vue";

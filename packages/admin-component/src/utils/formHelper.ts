@@ -1,4 +1,5 @@
 import { FormInstance } from "@arco-design/web-vue";
+import type { TreeNodeData } from "@arco-design/web-vue";
 import {
     BaseFormCheckbox,
     BaseFormCheckboxGroup,
@@ -22,7 +23,8 @@ import {
     DateType,
     BaseFormTextarea,
     BaseFormCascaderOptions,
-    BaseFormCascader
+    BaseFormCascader,
+    BaseTreeSelect
 } from "./types";
 import { nextTick } from "vue";
 
@@ -338,6 +340,27 @@ const formHelper = {
             inputType: "inputNumber",
             label,
             field,
+            ...extra
+        };
+    },
+    /**
+     * 树选择器
+     * @param label
+     * @param field
+     * @param extra
+     * @returns
+     */
+    treeSelect(label: string, field: string, data: TreeNodeData[], extra?: BaseTreeSelect) {
+        extra = {
+            ...extra,
+            allowClear: extra?.clearable ?? true,
+            placeholder: extra?.placeholder ?? "请输入"
+        };
+        return {
+            inputType: "treeSelect",
+            label,
+            field,
+            data,
             ...extra
         };
     },
