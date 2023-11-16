@@ -298,7 +298,7 @@ const formHelper = {
      * @param extra
      * @returns
      */
-    editor(label: string, field: string, extra?: BaseFormExtra) {
+    editor(label: string, field: string, extra?: BaseFormExtra & { theme?: "dark" | "light" }) {
         extra = {
             ...extra
         };
