@@ -18,7 +18,8 @@ import type {
     Textarea,
     Cascader,
     CascaderOption,
-    TreeSelect
+    TreeSelect,
+    FormItem
 } from "@arco-design/web-vue";
 /** form表单元素基础配置 */
 export type BaseFormExtra = {
@@ -29,7 +30,7 @@ export type BaseFormExtra = {
     labelTips?: string | (() => string);
     inputTips?: string | (() => string);
     width?: string | number;
-};
+} & InstanceType<typeof FormItem>["$props"];
 //radio选择器扩展
 export type BaseFormRadioGroup = BaseFormExtra & {
     type?: "button" | "radio";
