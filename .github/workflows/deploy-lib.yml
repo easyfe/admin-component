@@ -1,6 +1,7 @@
 name: Lib Deploy
 
 on:
+    workflow_dispatch:
     push:
         tags:
             - "*"
