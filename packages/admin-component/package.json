@@ -10,6 +10,7 @@
     "main": "dist/index.umd.js",
     "module": "dist/index.es.js",
     "typings": "dist/index.d.ts",
+    "repository": "https://github.com/easyfe/admin-component",
     "scripts": {
         "start:lib": "vite build -w",
         "build:lib": "rimraf dist es lib && vue-tsc --noEmit && vite build"
