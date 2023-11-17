@@ -11,7 +11,6 @@
 <script setup lang="ts">
 import { ArcoForm, formHelper, ruleHelper } from "@easyfe/admin-component";
 import { Message } from "@arco-design/web-vue";
-import "@arco-design/web-vue/es/time-picker/style/css.js";
 const form = ref();
 const formData = ref({
     key12: "https://cdn.v2ex.com/avatar/1b4e/0a2d/614153_xlarge.png?m=1681735508",
