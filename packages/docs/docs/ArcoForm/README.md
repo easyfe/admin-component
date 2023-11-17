@@ -5,20 +5,39 @@
 基于`arco-design`封装的表单，结合日常使用，集合了以下组件：
 
 -   checkbox（复选框）
+
 -   color（颜色选择器）
+
 -   color-range（渐变色选择器）
+
 -   date（日期选择器，支持年、月、日）
+
 -   editor（富文本编辑框）
+
 -   input（文本输入框）
+
 -   input-number（数字输入框）
+
 -   radio（单选框）
+
 -   select （下拉选择框）
+
 -   span（表单分割提示）
+
 -   switch（开关）
+
 -   textarea（文本域）
+
 -   time（时间选择框）
+
+    不知道为什么这个组件，外部引用的时候会丢失样式，需要手动引入下 css 文件
+
+    `import "@arco-design/web-vue/es/time-picker/style/css.js";`
+
 -   upload（上传组件）
+
 -   cascader（级联选择组件）
+
 -   treeSelect（树选择组件）
 
 如果以上不满足需求的，可以通过`slot`插槽使用自定义组件。

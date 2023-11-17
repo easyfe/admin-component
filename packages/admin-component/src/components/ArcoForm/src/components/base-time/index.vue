@@ -6,7 +6,6 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import FormItem from "../form-item/index.vue";
-import "@arco-design/web-vue/es/time-picker/style/css.js";
 
 defineOptions({
     name: "Time"

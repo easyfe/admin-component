@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import path from "path";
 import dts from "vite-plugin-dts";
 import vue from "@vitejs/plugin-vue";
-import { libInjectCss } from "vite-plugin-lib-inject-css";
+// import { libInjectCss } from "vite-plugin-lib-inject-css";
 import { ArcoResolver } from "unplugin-vue-components/resolvers";
 import AutoComponents from "unplugin-vue-components/vite";
 
@@ -21,7 +21,7 @@ export default defineConfig({
         // minify: false,
         lib: {
             entry: `${resolvePath("src")}/index.ts`,
-            name: "@easyfe/admin-component",
+            name: require("./package.json").name,
             fileName: (format) => `index.${format}.js`
         },
         rollupOptions: {
@@ -78,10 +78,10 @@ export default defineConfig({
             include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
             exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/, /[\\/]\.nuxt[\\/]/],
             // 解析的 UI 组件库
-            resolvers: [ArcoResolver({ sideEffect: true, resolveIcons: true })]
+            resolvers: [ArcoResolver({ sideEffect: false, resolveIcons: false })]
         }),
         vue(),
-        dts(),
-        libInjectCss()
+        dts()
+        // libInjectCss()
     ]
 });

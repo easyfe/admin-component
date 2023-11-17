@@ -11,6 +11,7 @@
 <script setup lang="ts">
 import { ArcoForm, formHelper, ruleHelper } from "@easyfe/admin-component";
 import { Message } from "@arco-design/web-vue";
+import "@arco-design/web-vue/es/time-picker/style/css.js";
 const form = ref();
 const formData = ref({
     key12: "https://cdn.v2ex.com/avatar/1b4e/0a2d/614153_xlarge.png?m=1681735508",
@@ -97,6 +98,22 @@ const formConfig = computed(() => {
             placeholder: ["开始时间1", "结束时间1"]
         }),
         formHelper.time("时间", "key11"),
+        formHelper.treeSelect("树形选择", "key9", [
+            {
+                title: "label1",
+                key: 1,
+                children: [
+                    {
+                        title: "label1-1",
+                        key: 11
+                    }
+                ]
+            },
+            {
+                title: "label2",
+                key: 2
+            }
+        ]),
         formHelper.editor("富文本", "key6")
     ];
 });
