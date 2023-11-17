@@ -15,13 +15,22 @@ jobs:
                   node-version: 16
 
             - run: npm i -g pnpm
-            - run: pnpm install
+
+            - name: Get version
+              id: get_version
+              run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
             - name: Build
-              run: pnpm build:lib && pnpm build:docs
+              run: |
+                  sed -i "s/NPM_VERSION/${{ steps.get_version.outputs.VERSION }}/g" $(pwd)/packages/admin-component/package.json
+                  pnpm install
+                  pnpm build:lib
+                  pnpm build:docs
 
             - name: Deploy Lib
-              run: cd packages/admin-component && npm publish
+              run: |
+                  cd packages/admin-component
+                  npm publish
               env:
                   NPM_TOKEN: ${{ secrets.EASYFE_NPM_TOKEN }}
 
@@ -30,10 +39,6 @@ jobs:
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: packages/docs/.vitepress/dist
-
-            - name: Get version
-              id: get_version
-              run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
             - name: Create Release
               uses: actions/create-release@v1
