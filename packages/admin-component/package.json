@@ -1,6 +1,6 @@
 {
     "name": "@easyfe/admin-component",
-    "version": "NPM_VERSION",
+    "NPM_VERSION": "",
     "files": [
         "dist",
         "LICENSE",

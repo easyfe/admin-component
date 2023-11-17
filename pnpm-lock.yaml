@@ -102,8 +102,8 @@ importers:
   packages/admin-component:
     dependencies:
       '@arco-design/web-vue':
-        specifier: ^2.50.0
-        version: 2.50.0(vue@3.3.4)
+        specifier: ^2.53.2
+        version: 2.53.2(vue@3.3.4)
       '@tinymce/tinymce-vue':
         specifier: ^5.1.0
         version: 5.1.0(vue@3.3.4)
@@ -132,11 +132,11 @@ importers:
   packages/docs:
     dependencies:
       '@arco-design/web-vue':
-        specifier: ^2.50.0
-        version: 2.50.0(vue@3.3.4)
+        specifier: latest
+        version: 2.53.2(vue@3.3.4)
       '@easyfe/admin-component':
         specifier: latest
-        version: link:../admin-component
+        version: 0.3.6(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.4.1)(gradient-parser@1.0.2)(tinycolor2@1.6.0)(vue-types@4.2.1)
       '@easyfe/web-request':
         specifier: latest
         version: 1.0.1
@@ -333,8 +333,8 @@ packages:
       color: 3.2.1
     dev: false
 
-  /@arco-design/web-vue@2.50.0(vue@3.3.4):
-    resolution: {integrity: sha512-/hQK0fbi1WMi6RXel5+Jrp6bM3d1xmGKL7Y7QRy4uMum7yqABoDS3X4fV2Ny5RE4wtyD+jmM1xcIC1QRhhmFHQ==}
+  /@arco-design/web-vue@2.53.2(vue@3.3.4):
+    resolution: {integrity: sha512-hcrlCkvyjDD9xwWgXLnE48+TEpappP6e8TSLSrlmD9xVQNes4uZIBs+xR90zAUDHOyCokRrJsY1kG+OsZU+FSg==}
     peerDependencies:
       vue: ^3.1.0
     dependencies:
@@ -597,6 +597,28 @@ packages:
     transitivePeerDependencies:
       - '@algolia/client-search'
     dev: true
+
+  /@easyfe/admin-component@0.3.6(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.4.1)(gradient-parser@1.0.2)(tinycolor2@1.6.0)(vue-types@4.2.1):
+    resolution: {integrity: sha512-pSHvMN4eYeVeapteNX/Kn7EbdJwh3lMeeNmx+IUT0RsCsGvwNwUNaZgZFC/lDxkBiOmVBW2GgSXbz6llrsn9CA==}
+    dependencies:
+      '@arco-design/web-vue': 2.53.2(vue@3.3.4)
+      '@tinymce/tinymce-vue': 5.1.0(vue@3.3.4)
+      dayjs: 1.11.9
+      hex-to-css-filter: 5.4.0
+      lodash-es: 4.17.21
+      tinymce: 6.6.2
+      vue: 3.3.4
+      vue-dompurify-html: 4.1.4(vue@3.3.4)
+      vue3-colorpicker: 2.2.2(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.4.1)(gradient-parser@1.0.2)(lodash-es@4.17.21)(tinycolor2@1.6.0)(vue-types@4.2.1)(vue@3.3.4)
+    transitivePeerDependencies:
+      - '@aesoper/normal-utils'
+      - '@popperjs/core'
+      - '@vue/composition-api'
+      - '@vueuse/core'
+      - gradient-parser
+      - tinycolor2
+      - vue-types
+    dev: false
 
   /@easyfe/eslint-config-vue3ts@0.0.4(typescript@4.9.5):
     resolution: {integrity: sha512-kYn6QJgQVeEh1cNXN7gql+QcMlmTU/oi7iYpfmKLv/AQnwaX+FnKZl8b+pY/eP5HKmmh5yImXnO6tx3xVSXuIg==}

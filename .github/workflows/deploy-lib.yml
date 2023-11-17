@@ -22,7 +22,7 @@ jobs:
 
             - name: Build
               run: |
-                  sed -i "s/NPM_VERSION/${{ steps.get_version.outputs.VERSION }}/g" $(pwd)/packages/admin-component/package.json
+                  sed -i "s/\"NPM_VERSION\": \"\",/\"version\": \"${{ steps.get_version.outputs.VERSION }}\",/" $(pwd)/packages/admin-component/package.json
                   pnpm install
                   pnpm build:lib
                   pnpm build:docs
