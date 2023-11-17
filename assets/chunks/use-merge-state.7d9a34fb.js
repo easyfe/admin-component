@@ -1,1 +1,0 @@
-import{Q as s}from"./index-26f37704.5c71cfc4.js";import{j as n,a7 as r,w as c,m as v}from"./framework.f5b7da40.js";function m(u){const a=n(u);return[a,t=>{a.value=t}]}function d(u,a){const{value:e}=r(a),[t,l]=m(s(e.value)?u:e.value);return c(e,o=>{s(o)&&l(void 0)}),[v(()=>s(e.value)?t.value:e.value),l,t]}export{d as a,m as u};
