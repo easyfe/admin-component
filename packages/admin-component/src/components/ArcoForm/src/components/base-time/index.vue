@@ -33,6 +33,7 @@ const model = computed({
 });
 </script>
 <style lang="less" scoped>
+@import "@arco-design/web-vue/es/time-picker/style/index.less";
 .n-time-picker {
     width: 100%;
 }
