@@ -1,6 +1,6 @@
 <template>
     <form-item>
-        <a-input v-bind="$attrs" @input="onInput" @clear="onClear">
+        <a-input v-bind="$attrs" :default-value="model" @input="onInput" @clear="onClear">
             <template v-if="$attrs.prepend" #prepend> {{ $attrs.prepend }} </template>
             <template v-if="$attrs.append" #append> {{ $attrs.append }} </template>
         </a-input>
