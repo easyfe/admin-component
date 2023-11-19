@@ -117,8 +117,8 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
       tinymce:
-        specifier: ^6.6.2
-        version: 6.6.2
+        specifier: ^6.7.2
+        version: 6.7.2
       vue:
         specifier: ^3.2.23
         version: 3.3.4
@@ -136,7 +136,7 @@ importers:
         version: 2.53.2(vue@3.3.4)
       '@easyfe/admin-component':
         specifier: latest
-        version: 0.3.6(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.4.1)(gradient-parser@1.0.2)(tinycolor2@1.6.0)(vue-types@4.2.1)
+        version: 0.3.13(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.4.1)(gradient-parser@1.0.2)(tinycolor2@1.6.0)(vue-types@4.2.1)
       '@easyfe/web-request':
         specifier: latest
         version: 1.0.1
@@ -598,15 +598,15 @@ packages:
       - '@algolia/client-search'
     dev: true
 
-  /@easyfe/admin-component@0.3.6(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.4.1)(gradient-parser@1.0.2)(tinycolor2@1.6.0)(vue-types@4.2.1):
-    resolution: {integrity: sha512-pSHvMN4eYeVeapteNX/Kn7EbdJwh3lMeeNmx+IUT0RsCsGvwNwUNaZgZFC/lDxkBiOmVBW2GgSXbz6llrsn9CA==}
+  /@easyfe/admin-component@0.3.13(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.4.1)(gradient-parser@1.0.2)(tinycolor2@1.6.0)(vue-types@4.2.1):
+    resolution: {integrity: sha512-BqqnDxfX9uRh8w2AF13aHXH95laeCuwMJndLRAEoFP+1RpCvFgO98BO4VakfVT7D02N+3ibh7vq+MkYalZ61EA==}
     dependencies:
       '@arco-design/web-vue': 2.53.2(vue@3.3.4)
       '@tinymce/tinymce-vue': 5.1.0(vue@3.3.4)
       dayjs: 1.11.9
       hex-to-css-filter: 5.4.0
       lodash-es: 4.17.21
-      tinymce: 6.6.2
+      tinymce: 6.7.3
       vue: 3.3.4
       vue-dompurify-html: 4.1.4(vue@3.3.4)
       vue3-colorpicker: 2.2.2(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@10.4.1)(gradient-parser@1.0.2)(lodash-es@4.17.21)(tinycolor2@1.6.0)(vue-types@4.2.1)(vue@3.3.4)
@@ -1127,7 +1127,7 @@ packages:
     peerDependencies:
       vue: ^3.0.0
     dependencies:
-      tinymce: 6.6.2
+      tinymce: 6.7.2
       vue: 3.3.4
     dev: false
 
@@ -5392,8 +5392,12 @@ packages:
     resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
     dev: false
 
-  /tinymce@6.6.2:
-    resolution: {integrity: sha512-ShoaznNP3qI8dPtEnYt3ByhAJfMhzIY1K04CoFu1IPDeAxmAZCUJLgfiplo8etP4wN8zrBIxHEqpwYYb2IllOQ==}
+  /tinymce@6.7.2:
+    resolution: {integrity: sha512-6h/02jHmXyghekFzmzccZxUUEFtlPEKHxOd+gd49bjno3ybavZInPIaDd/pp2GeEwsFm20oGgJCL7UiebXm9dw==}
+    dev: false
+
+  /tinymce@6.7.3:
+    resolution: {integrity: sha512-J7WmYIi/gt1RvZ6Ap2oQiUjzAoiS9pfV+d4GnKuZuPu8agmlAEAInNmMvMjfCNBzHv4JnZXY7qlHUAI0IuYQVA==}
     dev: false
 
   /tmp@0.0.33:

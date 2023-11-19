@@ -21,7 +21,7 @@
         "dayjs": "^1.11.9",
         "hex-to-css-filter": "^5.4.0",
         "lodash-es": "^4.17.21",
-        "tinymce": "^6.6.2",
+        "tinymce": "^6.7.2",
         "vue-dompurify-html": "^4.1.4",
         "@arco-design/web-vue": "^2.53.2",
         "vue": "^3.2.23"
