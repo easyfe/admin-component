@@ -11,6 +11,7 @@
 <script setup lang="ts">
 import { ArcoForm, formHelper, ruleHelper } from "@easyfe/admin-component";
 import { Message } from "@arco-design/web-vue";
+import { uploadFile } from "@/apis/common";
 const form = ref();
 const formData = ref({
     key12: "https://cdn.v2ex.com/avatar/1b4e/0a2d/614153_xlarge.png?m=1681735508",
@@ -63,9 +64,9 @@ const formConfig = computed(() => {
                 ]
             }
         ),
-        formHelper.uploadPic("图片", "key12", {
-            remove: true,
-            inputTips: "推荐使用400*400的图片"
+        formHelper.upload("图片", "key12", {
+            inputTips: "推荐使用400*400的图片",
+            customRequest: uploadFile
         }),
         formHelper.radio(
             "单选框",
@@ -113,7 +114,11 @@ const formConfig = computed(() => {
                 key: 2
             }
         ]),
-        formHelper.editor("富文本", "key6")
+        formHelper.editor("富文本", "key6", {
+            uploadProps: {
+                customRequest: uploadFile
+            }
+        })
     ];
 });
 

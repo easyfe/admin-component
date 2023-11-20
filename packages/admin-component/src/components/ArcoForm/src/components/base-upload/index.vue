@@ -1,181 +1,119 @@
 <template>
     <form-item>
-        <div class="upload-pic" :class="indepClass">
-            <div class="pic-box">
-                <div class="pic">
-                    <a-image
-                        v-if="modelValue"
-                        class="pic-image"
-                        show-loader
-                        fit="contain"
-                        :preview="false"
-                        :src="modelValue"
-                    ></a-image>
-                    <div v-if="!modelValue" class="img-seat upload" @click="showUpload">+</div>
-                    <div v-if="modelValue" class="label" @click="showUpload">更换图片</div>
-                    <img
-                        v-if="modelValue && remove"
-                        class="close-icon"
-                        src="./close-icon@2x.png"
-                        alt=""
-                        @click="removeIcon"
-                    />
-                </div>
-            </div>
-        </div>
+        <a-upload
+            list-type="picture-card"
+            :image-preview="true"
+            :default-file-list="fileList"
+            accept="image/*"
+            :on-before-upload="onBeforeUpload"
+            :on-before-remove="onBeforeRemove"
+            v-bind="$attrs"
+            @success="onSuccess"
+        ></a-upload>
     </form-item>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import FormItem from "../form-item/index.vue";
+import { FileItem, Message } from "@arco-design/web-vue";
 
 defineOptions({
     name: "Upload"
 });
 
-const props = defineProps({
-    modelValue: {
-        type: String,
-        default: ""
-    },
-    limit: {
-        type: Number,
-        default: 1
-    },
-    remove: {
-        type: Boolean,
-        default: false
-    },
-    disabled: {
-        type: Boolean,
-        default: false
-    },
-    independent: {
-        type: Boolean,
-        default: false
+const props = withDefaults(
+    defineProps<{
+        modelValue: string | string[];
+        maxSize?: number;
+    }>(),
+    {
+        modelValue: () => "",
+        maxSize: 0
     }
-});
+);
 const emits = defineEmits<{
-    (e: "update:modelValue", value: any): void;
-    (e: "confirm", value: string): void;
-    (e: "remove"): void;
+    (e: "update:modelValue", data: any): void;
 }>();
-const fileMangerVisiable = ref(false);
-const onFileConfirm = (list: any): void => {
-    emits("update:modelValue", list[0].filePath);
-    emits("confirm", list[0].filePath);
-};
 
-const indepClass = computed(() => {
-    if (props.independent) {
-        return "base-upload-indep";
+const model = computed({
+    get: () => {
+        return props.modelValue;
+    },
+    set: (newVal) => {
+        emits("update:modelValue", newVal);
     }
-    return "";
 });
 
-const showUpload = (): void => {
-    if (props.disabled) return;
-    fileMangerVisiable.value = true;
-};
+const fileList = computed<any[]>(() => {
+    if (Array.isArray(model.value)) {
+        return model.value.map((item) => {
+            return {
+                uid: item,
+                name: item,
+                status: "done",
+                url: item
+            };
+        });
+    } else {
+        return [
+            {
+                uid: model.value,
+                name: model.value,
+                status: "done",
+                url: model.value
+            }
+        ];
+    }
+});
 
-const removeIcon = (): void => {
-    if (props.disabled) return;
-    emits("update:modelValue", "");
-    emits("remove");
-};
-</script>
+function formatFileSize(size: number): string {
+    const kilobyte = 1024;
+    const megabyte = kilobyte * 1024;
+    const gigabyte = megabyte * 1024;
 
-<style lang="less" scoped>
-.base-upload-indep {
-    :deep(.arco-form-item-label-col) {
-        padding-right: 0;
+    if (size < kilobyte) {
+        return size + " B";
+    } else if (size < megabyte) {
+        return (size / kilobyte).toFixed(2) + " KB";
+    } else if (size < gigabyte) {
+        return (size / megabyte).toFixed(2) + " MB";
+    } else {
+        return (size / gigabyte).toFixed(2) + " GB";
     }
 }
-.upload-pic {
-    display: flex;
-    flex-shrink: 0;
 
-    .title {
-        font-size: 14px;
-        color: #999999;
-        line-height: 20px;
-    }
+function onBeforeUpload(file: File): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+        if (props.maxSize && file.size > props.maxSize * 1024) {
+            const maxValue = formatFileSize(props.maxSize * 1024);
+            Message.error(`文件大小不能超过${maxValue}`);
+            reject(false);
+        }
+        resolve(true);
+    });
+}
 
-    .pic-box {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
+function onBeforeRemove(file: FileItem): Promise<boolean> {
+    return new Promise((resolve) => {
+        const index = fileList.value.findIndex((item) => item.url === file.url);
+        if (index > -1) {
+            fileList.value.splice(index, 1);
+            model.value = fileList.value.map((item) => item.url);
+        }
+        resolve(true);
+    });
+}
 
-        .pic {
-            width: 64px;
-            height: 64px;
-            position: relative;
-
-            .pic-image {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: 40px;
-                width: 64px;
-                height: 64px;
-                background-color: #f5f6fa;
-                border-radius: 3px;
-                :deep(.arco-image-img) {
-                    width: 64px;
-                    height: 64px;
-                }
-                :deep(.arco-image-loader-spin-text) {
-                    font-size: 12px;
-                }
-            }
-
-            .label {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 20px;
-                line-height: 20px;
-                text-align: center;
-                background: rgba(0, 0, 0, 0.5);
-                color: #fff;
-                font-size: 12px;
-                z-index: 2;
-                border-bottom-left-radius: 3px;
-                border-bottom-right-radius: 3px;
-                cursor: pointer;
-            }
-
-            .close-icon {
-                width: 16px;
-                height: 16px;
-                position: absolute;
-                top: -8px;
-                right: -8px;
-                cursor: pointer;
-            }
-
-            .img-seat {
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                border: 1px dashed #c0ccda;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #c0ccda;
-                cursor: pointer;
-                user-select: none;
-
-                &:hover {
-                    border-color: #1890ff;
-                    color: #1890ff;
-                }
-            }
+function onSuccess(file: FileItem): void {
+    if (file.url) {
+        if (Array.isArray(model.value)) {
+            model.value.push(file.url);
+        } else {
+            model.value = file.url;
         }
     }
 }
-</style>
+</script>
+
+<style lang="less" scoped></style>

@@ -13,7 +13,7 @@ const list: Record<string, any> = {
     radio: defineAsyncComponent(() => import("./base-radio/index.vue")),
     select: defineAsyncComponent(() => import("./base-select/index.vue")),
     editor: defineAsyncComponent(() => import("./base-editor/index.vue")),
-    uploadPic: defineAsyncComponent(() => import("./base-upload/index.vue")),
+    upload: defineAsyncComponent(() => import("./base-upload/index.vue")),
     cascader: defineAsyncComponent(() => import("./base-cascader/index.vue")),
     treeSelect: defineAsyncComponent(() => import("./base-tree-select/index.vue"))
 };

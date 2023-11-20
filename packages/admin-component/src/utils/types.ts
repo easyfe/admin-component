@@ -19,7 +19,8 @@ import type {
     Cascader,
     CascaderOption,
     TreeSelect,
-    FormItem
+    FormItem,
+    Upload
 } from "@arco-design/web-vue";
 /** form表单元素基础配置 */
 export type BaseFormExtra = {
@@ -30,6 +31,7 @@ export type BaseFormExtra = {
     labelTips?: string | (() => string);
     inputTips?: string | (() => string);
     width?: string | number;
+    disabled?: boolean;
 } & InstanceType<typeof FormItem>["$props"];
 //radio选择器扩展
 export type BaseFormRadioGroup = BaseFormExtra & {
@@ -91,14 +93,19 @@ export type BaseFormRangePicker = BaseFormDate & InstanceType<typeof RangePicker
 //时间选择框
 export type BaseFormTime = BaseFormExtra & InstanceType<typeof TimePicker>["$props"];
 //上传组件
-export type BaseFormUpload = BaseFormExtra & {
-    remove?: boolean;
-    independent?: boolean;
-    limit?: number;
-    disabled?: boolean;
-};
+export type BaseFormUpload = BaseFormExtra &
+    InstanceType<typeof Upload>["$props"] & {
+        maxSize?: number; //最大上传大小,单位KB
+    };
 //树选择器
 export type BaseTreeSelect = BaseFormExtra & InstanceType<typeof TreeSelect>["$props"];
+//富文本编辑器
+export type BaseEditor = BaseFormExtra & {
+    theme?: "dark" | "light";
+    uploadProps?: InstanceType<typeof Upload>["$props"] & {
+        maxSize?: number; //最大上传大小,单位KB
+    };
+};
 
 //=====================以下为table相关=====================
 

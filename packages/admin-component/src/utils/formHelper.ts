@@ -24,7 +24,8 @@ import {
     BaseFormTextarea,
     BaseFormCascaderOptions,
     BaseFormCascader,
-    BaseTreeSelect
+    BaseTreeSelect,
+    BaseEditor
 } from "./types";
 import { nextTick } from "vue";
 
@@ -298,7 +299,7 @@ const formHelper = {
      * @param extra
      * @returns
      */
-    editor(label: string, field: string, extra?: BaseFormExtra & { theme?: "dark" | "light" }) {
+    editor(label: string, field: string, extra?: BaseEditor) {
         extra = {
             ...extra
         };
@@ -365,15 +366,15 @@ const formHelper = {
         };
     },
     /**
-     * 上传图片
+     * 上传文件
      * @param label
      * @param field 绑定值key
      * @param extra
      * @returns
      */
-    uploadPic(label: string, field: string, extra?: BaseFormUpload) {
+    upload(label: string, field: string, extra?: BaseFormUpload) {
         return {
-            inputType: "uploadPic",
+            inputType: "upload",
             label,
             field,
             ...extra
