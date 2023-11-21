@@ -8,7 +8,7 @@ hero:
     actions:
         - theme: brand
           text: 开始使用
-          link: /docs/ArcoTable/README
+          link: /guide/installation
         - theme: alt
           text: View on Github
           link: https://github.com/easyfe/admin-component

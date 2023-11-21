@@ -16,10 +16,19 @@ export default defineConfig({
         // https://vitepress.dev/reference/default-theme-config
         nav: [
             { text: "Home", link: "/" },
-            { text: "Examples", link: "/docs/ArcoTable/README" }
+            { text: "Examples", link: "/guide/installation" }
         ],
 
         sidebar: [
+            {
+                text: "指南",
+                items: [
+                    {
+                        text: "安装",
+                        link: "/guide/installation"
+                    }
+                ]
+            },
             {
                 text: "基础组件",
                 items: [
