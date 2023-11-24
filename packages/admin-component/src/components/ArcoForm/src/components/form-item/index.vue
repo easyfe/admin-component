@@ -69,9 +69,6 @@ function getStringValue(value: string | (() => string)) {
 }
 </script>
 <style scoped lang="less">
-:deep(.arco-form-item-label) {
-    color: #898b8f !important;
-}
 :deep(.arco-picker) {
     width: 100%;
 }
