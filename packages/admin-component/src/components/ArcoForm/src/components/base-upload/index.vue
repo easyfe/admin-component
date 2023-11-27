@@ -17,6 +17,8 @@
 import { computed } from "vue";
 import FormItem from "../form-item/index.vue";
 import { FileItem, Message } from "@arco-design/web-vue";
+import "@arco-design/web-vue/es/upload/style/css";
+import "@arco-design/web-vue/es/image/style/css";
 
 defineOptions({
     name: "Upload"

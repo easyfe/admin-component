@@ -30,10 +30,6 @@
 
 -   time（时间选择框）
 
-    不知道为什么这个组件，外部引用的时候会丢失样式，需要手动引入下 css 文件
-
-    `import "@arco-design/web-vue/es/time-picker/style/css.js";`
-
 -   upload（上传组件）
 
 -   cascader（级联选择组件）
