@@ -24,7 +24,7 @@ export default defineConfig({
                 text: "指南",
                 items: [
                     {
-                        text: "安装",
+                        text: "快速开始",
                         link: "/guide/installation"
                     }
                 ]

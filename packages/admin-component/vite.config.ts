@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import path from "path";
 import dts from "vite-plugin-dts";
 import vue from "@vitejs/plugin-vue";
-import { libInjectCss } from "vite-plugin-lib-inject-css";
 import { ArcoResolver } from "unplugin-vue-components/resolvers";
 import AutoComponents from "unplugin-vue-components/vite";
 
@@ -31,30 +30,6 @@ export default defineConfig({
                 ...Object.keys(require("./package.json").dependencies),
                 ...Object.keys(require("./package.json").peerDependencies)
             ],
-            // output: [
-            //     {
-            //         //打包格式
-            //         format: "es",
-            //         //打包后文件名
-            //         entryFileNames: "[name].mjs",
-            //         //让打包目录和我们目录对应
-            //         // preserveModules: true,
-            //         exports: "named",
-            //         //配置打包根目录
-            //         dir: "es"
-            //     },
-            //     {
-            //         //打包格式
-            //         format: "cjs",
-            //         //打包后文件名
-            //         entryFileNames: "[name].js",
-            //         //让打包目录和我们目录对应
-            //         // preserveModules: true,
-            //         exports: "named",
-            //         //配置打包根目录
-            //         dir: "lib"
-            //     }
-            // ]
             output: {
                 exports: "named",
                 // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
@@ -81,7 +56,6 @@ export default defineConfig({
             resolvers: [ArcoResolver({ sideEffect: true, resolveIcons: true })]
         }),
         vue(),
-        dts(),
-        libInjectCss()
+        dts()
     ]
 });

@@ -3,7 +3,7 @@ import "virtual:svg-icons-register";
 import "@vitepress-demo-preview/component/dist/style.css";
 import { AntDesignContainer, ElementPlusContainer, NaiveUIContainer } from "@vitepress-demo-preview/component";
 import "./style.css";
-import "@arco-design/web-vue/es/time-picker/style/css.js";
+import "@easyfe/admin-component/dist/style.css";
 
 export default {
     ...DefaultTheme,
