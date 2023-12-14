@@ -42,7 +42,12 @@
                     <!-- 右侧插槽 -->
                     <slot name="btns-slot"></slot>
                     <!-- 列表展示方式 -->
-                    <a-radio-group v-if="privateTableConfig.allowFlatten" v-model="flattenType" class="view-list">
+                    <a-radio-group
+                        v-if="privateTableConfig.allowFlatten"
+                        v-model="flattenType"
+                        class="view-list"
+                        @change="setTableHeight"
+                    >
                         <a-radio value="app">
                             <template #radio="{ checked }">
                                 <div :class="['view-item', checked ? 'view-item-active' : '']">
@@ -130,52 +135,25 @@
             </div>
         </div>
         <!-- 表格主体 -->
-        <div :class="['table', tableConfig.allowFlatten && flattenType === 'app' ? 'app-list' : '']">
-            <template v-if="!tableConfig.allowFlatten || flattenType === 'list'">
-                <a-table
-                    ref="baseTable"
-                    v-model:selectedKeys="selectedKeys"
-                    :loading="loading"
-                    :data="privateList"
-                    :pagination="false"
-                    :stripe="true"
-                    v-bind="privateTableConfig.arcoProps"
-                    @selection-change="onSelectionChange"
-                >
-                    <template #columns>
-                        <template v-for="(item, column_index) in privateTableConfig?.columns">
-                            <!-- 插槽类型 -->
-                            <slot v-if="item.type === 'slot'" :name="item.prop"></slot>
-                            <a-table-column v-else :key="column_index" v-bind="getColumnConfig(item)">
-                                <template #cell="{ record, rowIndex }">
-                                    <!-- 普通列 -->
-                                    <template v-if="item.type === 'default'">
-                                        {{
-                                            record[item.prop]
-                                                ? `${item.leftExtra || ""}${record[item.prop]}${item.rightExtra || ""}`
-                                                : "-"
-                                        }}
-                                    </template>
-                                    <!-- 时间列 -->
-                                    <template v-if="item.type === 'date'">
-                                        <template
-                                            v-for="(dItem, dIndex) in getSplitDate(record[item.prop], item)"
-                                            :key="dIndex"
-                                        >
-                                            {{ dItem }}<br />
-                                        </template>
-                                    </template>
-                                    <!-- 字典列 -->
-                                    <template v-if="item.type === 'dictionary'">
-                                        {{ setDictionaryValue(item.prop, record[item.prop]) }}
-                                    </template>
-                                    <!-- 状态列 -->
-                                    <template v-if="item.type === 'status'">
-                                        <a-badge v-bind="item.handler?.(record)"></a-badge>
-                                    </template>
-                                    <!-- 链接列 -->
-                                    <template v-if="item.type === 'link'">
-                                        <a-link @click.stop="item.handler?.(record)">
+        <div ref="baseTable" :class="['table']">
+            <a-spin :loading="loading">
+                <template v-if="!tableConfig.allowFlatten || flattenType === 'list'">
+                    <a-table
+                        v-model:selectedKeys="selectedKeys"
+                        :data="privateList"
+                        :pagination="false"
+                        :stripe="true"
+                        v-bind="privateTableConfig.arcoProps"
+                        @selection-change="onSelectionChange"
+                    >
+                        <template #columns>
+                            <template v-for="(item, column_index) in privateTableConfig?.columns">
+                                <!-- 插槽类型 -->
+                                <slot v-if="item.type === 'slot'" :name="item.prop"></slot>
+                                <a-table-column v-else :key="column_index" v-bind="getColumnConfig(item)">
+                                    <template #cell="{ record, rowIndex }">
+                                        <!-- 普通列 -->
+                                        <template v-if="item.type === 'default'">
                                             {{
                                                 record[item.prop]
                                                     ? `${item.leftExtra || ""}${record[item.prop]}${
@@ -183,37 +161,72 @@
                                                       }`
                                                     : "-"
                                             }}
-                                        </a-link>
-                                    </template>
-                                    <!-- 操作按钮组 -->
-                                    <a-space v-if="item.type === 'btns'">
-                                        <template v-for="(btn_item, btn_index) in item.btns">
-                                            <a-button
-                                                v-if="handleCheckColumnBtnIf(record, rowIndex, btn_item)"
-                                                :key="btn_index"
-                                                class="btn handle-btns"
-                                                :disabled="handleCheckColumnBtnDidsable(record, rowIndex, btn_item)"
-                                                :style="{
-                                                    color: btn_item.color && !btn_item.disabled ? btn_item.color : ''
-                                                }"
-                                                :status="btn_item.status || 'normal'"
-                                                type="text"
-                                                @click.stop="handleClickColumnBtn(record, rowIndex, btn_item)"
-                                                >{{ handleSetColumnBtnLabel(record, rowIndex, btn_item) }}</a-button
-                                            >
                                         </template>
-                                    </a-space>
-                                </template>
-                            </a-table-column>
+                                        <!-- 时间列 -->
+                                        <template v-if="item.type === 'date'">
+                                            <template
+                                                v-for="(dItem, dIndex) in getSplitDate(record[item.prop], item)"
+                                                :key="dIndex"
+                                            >
+                                                {{ dItem }}<br />
+                                            </template>
+                                        </template>
+                                        <!-- 字典列 -->
+                                        <template v-if="item.type === 'dictionary'">
+                                            {{ setDictionaryValue(item.prop, record[item.prop]) }}
+                                        </template>
+                                        <!-- 状态列 -->
+                                        <template v-if="item.type === 'status'">
+                                            <a-badge v-bind="item.handler?.(record)"></a-badge>
+                                        </template>
+                                        <!-- 链接列 -->
+                                        <template v-if="item.type === 'link'">
+                                            <a-link @click.stop="item.handler?.(record)">
+                                                {{
+                                                    record[item.prop]
+                                                        ? `${item.leftExtra || ""}${record[item.prop]}${
+                                                              item.rightExtra || ""
+                                                          }`
+                                                        : "-"
+                                                }}
+                                            </a-link>
+                                        </template>
+                                        <!-- 操作按钮组 -->
+                                        <a-space v-if="item.type === 'btns'" class="column-btns">
+                                            <template v-for="(btn_item, btn_index) in item.btns">
+                                                <a-link
+                                                    v-if="handleCheckColumnBtnIf(record, rowIndex, btn_item)"
+                                                    :key="btn_index"
+                                                    class="btn handle-btns"
+                                                    :disabled="handleCheckColumnBtnDidsable(record, rowIndex, btn_item)"
+                                                    :style="{
+                                                        color:
+                                                            btn_item.color && !btn_item.disabled ? btn_item.color : ''
+                                                    }"
+                                                    :status="btn_item.status || 'normal'"
+                                                    type="text"
+                                                    @click.stop="handleClickColumnBtn(record, rowIndex, btn_item)"
+                                                    >{{ handleSetColumnBtnLabel(record, rowIndex, btn_item) }}
+                                                </a-link>
+                                            </template>
+                                        </a-space>
+                                    </template>
+                                </a-table-column>
+                            </template>
                         </template>
-                    </template>
-                </a-table>
-            </template>
-            <template v-else>
-                <template v-for="(item, index) in privateList">
-                    <slot name="slot_item" :row="item" :index="index"> </slot>
+                    </a-table>
                 </template>
-            </template>
+                <template v-else>
+                    <div
+                        :class="[tableConfig.allowFlatten && flattenType === 'app' ? 'app-list' : '']"
+                        :style="getAppListStyle"
+                    >
+                        <template v-for="(item, index) in privateList">
+                            <slot name="slot_item" :row="item" :index="index"> </slot>
+                        </template>
+                    </div>
+                </template>
+            </a-spin>
         </div>
         <!-- 表格底部 -->
         <div v-if="enableFooter" class="footer">
@@ -353,6 +366,17 @@ const privateTableConfig = computed<_TableConfig>(() => {
     }
     return merge(cloneDeep(defaultTableConfig), cloneDeep(props.tableConfig));
 });
+
+const getAppListStyle = computed<any>(() => {
+    if (privateTableConfig.value.autoMaxHeight) {
+        return {
+            maxHeight: tableHeight.value + "px",
+            overflowY: "auto"
+        };
+    }
+    return {};
+});
+
 const flattenType = ref<"app" | "list">("app");
 //是否结束
 const finished = ref(false);
@@ -619,8 +643,16 @@ const setTableHeight = (): void => {
         }
         const table = baseTable.value;
         const footerHeight = enableFooter.value ? 65 : 0;
-        //最后50为一个buffer值，20分别是padding和margin
-        tableHeight.value = window.innerHeight - table.$el.getBoundingClientRect().top - 20 - 20 - 50 - footerHeight;
+        let bufferValue = 0;
+        if (privateTableConfig.value.allowFlatten && flattenType.value === "app") {
+            bufferValue = 0;
+        } else {
+            //table模式下，需要加上表头的高度
+            bufferValue = 40;
+        }
+        //padding24和margin20
+        tableHeight.value =
+            window.innerHeight - table.getBoundingClientRect().top - 24 - 20 - bufferValue - footerHeight;
     });
 };
 
@@ -735,11 +767,15 @@ onBeforeUnmount(() => {
         :deep(.arco-badge-status-text) {
             font-size: 14px;
         }
+        :deep(.arco-spin) {
+            width: 100%;
+        }
     }
 
     .app-list {
         display: flex;
         flex-wrap: wrap;
+        @include scroll-y();
     }
 
     .footer {
@@ -787,6 +823,19 @@ onBeforeUnmount(() => {
         border: 1px solid rgb(var(--primary-6));
         svg {
             color: rgb(var(--primary-6));
+        }
+    }
+}
+.column-btns {
+    :deep(.arco-space-item) {
+        position: relative;
+        &:not(:last-child)::after {
+            position: absolute;
+            content: "";
+            right: -4px;
+            width: 1px;
+            height: 15px;
+            background-color: var(--color-neutral-3);
         }
     }
 }
