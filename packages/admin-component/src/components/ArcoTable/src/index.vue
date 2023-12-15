@@ -775,7 +775,19 @@ onBeforeUnmount(() => {
     .app-list {
         display: flex;
         flex-wrap: wrap;
-        @include scroll-y();
+
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 7px;
+            background: #b7b9c0;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
     }
 
     .footer {
