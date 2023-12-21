@@ -19,7 +19,7 @@
                     </template>
                 </a-radio-group>
                 <!-- 左侧插槽 -->
-                <slot name="left-btns"></slot>
+                <slot name="tlBtns"></slot>
             </div>
             <!-- table右上角功能按钮 -->
             <div class="btns">
@@ -40,7 +40,7 @@
                         </template>
                     </template>
                     <!-- 右侧插槽 -->
-                    <slot name="btns-slot"></slot>
+                    <slot name="trBtns"></slot>
                     <!-- 列表展示方式 -->
                     <a-radio-group
                         v-if="privateTableConfig.allowFlatten"
@@ -403,7 +403,7 @@ const baseTable = ref();
 
 //是否开启多选
 const enableSelection = computed(() => {
-    return !!privateTableConfig.value?.arcoProps?.rowSelection;
+    return privateTableConfig.value?.arcoProps?.rowSelection?.type === "checkbox";
 });
 
 //是否显示footer
@@ -423,11 +423,7 @@ const slots = useSlots();
 
 const topShow = computed(() => {
     return (
-        tabsShow.value ||
-        btnsShow.value ||
-        slots["left-btns"] ||
-        slots["btns-slot"] ||
-        privateTableConfig.value.allowFlatten
+        tabsShow.value || btnsShow.value || slots["tlBtns"] || slots["trBtns"] || privateTableConfig.value.allowFlatten
     );
 });
 
