@@ -1,10 +1,12 @@
 import { App, Plugin, render, h } from "vue";
 import { Modal } from "@arco-design/web-vue";
 import ArcoModalForm from "./src/index.vue";
+import { Form } from "@arco-design/web-vue";
 type Options = {
     value?: Record<string, any>;
     modalConfig?: InstanceType<typeof Modal>["$props"];
     formConfig?: Record<string, any>[];
+    arcoFormProps?: Partial<InstanceType<typeof Form>["$props"]>;
     ok?: (data: Record<string, any>) => Promise<void> | void;
     change?: (data: Record<string, any>) => void;
 };
@@ -20,7 +22,7 @@ const ArcoModalFormShow = (opt: Options) => {
         render(null, document.body);
     };
     // 使用 h 函数创建 vnode
-    const vnode = h(ArcoModalForm, {
+    const vnode = h(ArcoModalForm as any, {
         ...opt,
         visible: true,
         destroy: handleDestroy

@@ -64,7 +64,7 @@ const isDark = computed(() => {
 });
 
 const initEditor = computed(() => {
-    const baseUrl = `https://cdn.han3sui.com/static/tinymce/6.7.2`;
+    const baseUrl = `//iots-cdnaccelerate.lshenergy.com/static/tinymce/6.7.2`;
     return {
         language_url: `${baseUrl}/langs/${props.language}.js`,
         skin_url: `${baseUrl}/skins/ui/oxide${isDark.value ? "-dark" : ""}`,

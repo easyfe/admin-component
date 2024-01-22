@@ -1,6 +1,6 @@
 <template>
     <form-item>
-        <a-textarea v-model.trim="model" v-bind="$attrs"></a-textarea>
+        <a-textarea v-model="model" v-bind="$attrs"></a-textarea>
     </form-item>
 </template>
 <script lang="ts" setup>

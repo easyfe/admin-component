@@ -15,7 +15,8 @@ const list: Record<string, any> = {
     editor: defineAsyncComponent(() => import("./base-editor/index.vue")),
     upload: defineAsyncComponent(() => import("./base-upload/index.vue")),
     cascader: defineAsyncComponent(() => import("./base-cascader/index.vue")),
-    treeSelect: defineAsyncComponent(() => import("./base-tree-select/index.vue"))
+    treeSelect: defineAsyncComponent(() => import("./base-tree-select/index.vue")),
+    modalSelect: defineAsyncComponent(() => import("./base-modal-select/index.vue"))
 };
 
 export default list;

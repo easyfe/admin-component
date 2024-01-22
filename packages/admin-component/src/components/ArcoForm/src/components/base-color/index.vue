@@ -6,12 +6,15 @@
                     <div class="base-color-inner" :style="{ background: model }"></div>
                 </div>
                 <template #content>
-                    <color-picker v-model:pureColor="model" disable-history is-widget format="hex"></color-picker>
+                    <color-picker
+                        v-model:pureColor="model"
+                        disable-history
+                        is-widget
+                        format="hex"
+                        @pure-color-change="changeColor"
+                    ></color-picker>
                 </template>
             </a-trigger>
-            <!-- <div class="base-color-wrapper" :trigger="['click']">
-                <color-picker v-model:pureColor="model" disable-history></color-picker>
-            </div> -->
             <div class="base-color-reset">
                 <a-button type="text" @click="reset">重置</a-button>
             </div>
@@ -21,24 +24,25 @@
 <script lang="ts" setup>
 import { ColorPicker } from "vue3-colorpicker";
 import "vue3-colorpicker/style.css";
-import { computed, onMounted, ref } from "vue";
-import { rgbaToHex } from "./untils";
+import { computed, onMounted } from "vue";
 import FormItem from "../form-item/index.vue";
 
 defineOptions({
     name: "Color"
 });
 
-const props = defineProps({
-    modelValue: {
-        type: String,
-        default: ""
-    },
-    defaultColor: {
-        type: String,
-        default: ""
+const props = withDefaults(
+    defineProps<{
+        modelValue: string;
+        defaultColor: string;
+        change?: (color: string) => void;
+    }>(),
+    {
+        modelValue: "",
+        defaultColor: "",
+        change: undefined
     }
-});
+);
 
 onMounted(() => {
     if (!props.modelValue) reset();
@@ -61,11 +65,8 @@ const model = computed({
     }
 });
 
-const changeColor = (color: any): void => {
-    // model.value = color.hex;
-    const { r, g, b, a } = color.rgba;
-    const rgba = `rgba(${r},${g},${b},${a})`;
-    model.value = rgbaToHex(rgba);
+const changeColor = (color: string): void => {
+    if (props.change) props.change(color);
 };
 </script>
 <style lang="less" scoped>

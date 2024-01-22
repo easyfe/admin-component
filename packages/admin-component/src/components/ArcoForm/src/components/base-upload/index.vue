@@ -48,6 +48,7 @@ const model = computed({
 });
 
 const fileList = computed<any[]>(() => {
+    if (!model.value) return [];
     if (Array.isArray(model.value)) {
         return model.value.map((item) => {
             return {

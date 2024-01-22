@@ -1,6 +1,6 @@
 <template>
     <form-item>
-        <a-input-number v-bind="$attrs" :default-value="model" @input="onInput" @clear="onClear">
+        <a-input-number v-model="privateValue" v-bind="$attrs" @input="onInput" @clear="onClear">
             <template v-if="$attrs.prepend" #prepend> {{ $attrs.prepend }} </template>
             <template v-if="$attrs.append" #append> {{ $attrs.append }} </template>
         </a-input-number>
@@ -39,6 +39,18 @@ const model = computed({
         emits("update:modelValue", newVal);
     }
 });
+
+const privateValue = ref();
+
+watch(
+    () => props.modelValue,
+    (newVal) => {
+        privateValue.value = newVal;
+    },
+    {
+        immediate: true
+    }
+);
 
 function onInput(e?: number) {
     if (props.debounce) {

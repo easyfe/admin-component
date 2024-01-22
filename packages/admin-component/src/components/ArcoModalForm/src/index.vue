@@ -1,7 +1,12 @@
 <template>
     <arco-modal :visible="computedVisible" :config="props.modalConfig" :ok="handleOk" @cancel="handleCancel">
         <div class="base-modal-content">
-            <arco-form ref="modalForm" v-model="privateFormData" :config="props.formConfig">
+            <arco-form
+                ref="modalForm"
+                v-model="privateFormData"
+                :config="props.formConfig"
+                :arco-form-props="arcoFormProps"
+            >
                 <template v-for="(_, slotName) in $slots" #[slotName]>
                     <slot :name="slotName"></slot>
                 </template>
@@ -14,6 +19,7 @@ import { formHelper } from "@ap/utils/formHelper";
 import type { Modal } from "@arco-design/web-vue";
 import { ArcoForm } from "@ap/components/ArcoForm";
 import { ArcoModal } from "@ap/components/ArcoModal";
+import { Form } from "@arco-design/web-vue";
 import { ref, computed, watch } from "vue";
 
 defineOptions({
@@ -26,6 +32,7 @@ const props = withDefaults(
         value?: Record<string, any>; //表单数据
         modalConfig?: InstanceType<typeof Modal>["$props"]; //modal配置
         formConfig?: Record<string, any>[]; //表单配置
+        arcoFormProps?: InstanceType<typeof Form>["$props"]; //表单props
         //以下用于函数式调用
         destroy?: () => void; //销毁方法
         ok?: (data: Record<string, any>) => Promise<void> | void; //确定方法
@@ -36,6 +43,7 @@ const props = withDefaults(
         value: () => ({}),
         modalConfig: () => <any>{},
         formConfig: () => [],
+        arcoFormProps: () => <any>{},
         destroy: undefined,
         ok: undefined,
         change: undefined

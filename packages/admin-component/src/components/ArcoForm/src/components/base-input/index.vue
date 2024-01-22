@@ -1,9 +1,17 @@
 <template>
     <form-item>
-        <a-input v-bind="$attrs" :default-value="model" @input="onInput" @clear="onClear">
-            <template v-if="$attrs.prepend" #prepend> {{ $attrs.prepend }} </template>
-            <template v-if="$attrs.append" #append> {{ $attrs.append }} </template>
-        </a-input>
+        <template v-if="$attrs.formType === 'password'">
+            <a-input-password v-model="model" v-bind="$attrs" />
+        </template>
+        <template v-else-if="$attrs.formType === 'search'">
+            <a-input-search v-model="model" v-bind="$attrs" />
+        </template>
+        <template v-else>
+            <a-input v-model="privateValue" v-bind="$attrs" @input="onInput" @clear="onClear">
+                <template v-if="$attrs.prepend" #prepend> {{ $attrs.prepend }} </template>
+                <template v-if="$attrs.append" #append> {{ $attrs.append }} </template>
+            </a-input>
+        </template>
     </form-item>
 </template>
 <script lang="ts" setup>
@@ -38,6 +46,18 @@ const model = computed({
         emits("update:modelValue", newVal);
     }
 });
+
+const privateValue = ref("");
+
+watch(
+    () => props.modelValue,
+    (newVal) => {
+        privateValue.value = newVal;
+    },
+    {
+        immediate: true
+    }
+);
 
 function onInput(e: string) {
     if (props.debounce) {

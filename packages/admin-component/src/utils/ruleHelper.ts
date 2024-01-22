@@ -8,16 +8,38 @@ const ruleHelper = {
             trigger
         };
     },
-    price(message: string): any {
+    phone(message?: string, trigger?: ValidateTrigger) {
         return {
-            pattern: new RegExp(/^([1-9]\d*|0)(\.\d{1,2})?$/),
-            message
+            required: true,
+            trigger,
+            validator: (value: string, callback: any) => {
+                if (!value) {
+                    callback("请输入");
+                    return;
+                }
+                if (!/^1[3456789]\d{9}$/.test(value)) {
+                    callback(message || "格式错误");
+                    return;
+                }
+                callback();
+            }
         };
     },
-    int(message: string): any {
+    mail(message?: string, trigger?: ValidateTrigger) {
         return {
-            pattern: new RegExp(/^[1-9]\d*|0$/),
-            message
+            required: true,
+            trigger,
+            validator: (value: string, callback: any) => {
+                if (!value) {
+                    callback("请输入");
+                    return;
+                }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    callback(message || "格式错误");
+                    return;
+                }
+                callback();
+            }
         };
     }
 };

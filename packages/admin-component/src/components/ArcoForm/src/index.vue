@@ -1,6 +1,6 @@
 <template>
     <div class="efe-arco-form">
-        <a-form ref="formRef" :model="model" size="medium" auto-label-width v-bind="$attrs">
+        <a-form ref="formRef" :model="model" size="medium" auto-label-width v-bind="arcoFormProps">
             <a-row :gutter="24" :style="getRowStyle">
                 <template v-for="(item, index) in props.config" :key="index">
                     <a-col v-if="handleCheckIf(item.if)" class="form-items" :span="getSpan(item)">
@@ -22,7 +22,7 @@
 <script lang="ts" setup>
 import { typeHelper } from "@ap/utils/typeHelper";
 import { cloneDeep } from "lodash-es";
-import { FormInstance, ValidatedError } from "@arco-design/web-vue";
+import { FormInstance, ValidatedError, Form } from "@arco-design/web-vue";
 import componentList from "./components/index";
 import { computed, ref, onMounted } from "vue";
 
@@ -32,11 +32,13 @@ defineOptions({
 
 const props = withDefaults(
     defineProps<{
+        arcoFormProps?: Partial<InstanceType<typeof Form>["$props"]>;
         config: Record<string, any>[];
         modelValue: any;
         layout?: "column" | "row";
     }>(),
     {
+        arcoFormProps: () => <any>{},
         layout: "column"
     }
 );

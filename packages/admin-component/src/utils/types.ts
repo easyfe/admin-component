@@ -20,11 +20,12 @@ import type {
     CascaderOption,
     TreeSelect,
     FormItem,
-    Upload
+    Upload,
+    InputSearch,
+    InputPassword
 } from "@arco-design/web-vue";
 /** form表单元素基础配置 */
 export type BaseFormExtra = {
-    clearable?: boolean;
     rules?: FieldRule | FieldRule[];
     if?: boolean | ((...args: any) => boolean);
     span?: number;
@@ -41,13 +42,22 @@ export type BaseFormRadio = InstanceType<typeof Radio>["$props"] & { label: stri
 //颜色选择器扩展
 export type BaseFormColor = {
     defaultColor?: string;
+    change?: (color: string) => void;
 };
 //文本输入框扩展
 export type BaseFormInput = BaseFormExtra &
+    InstanceType<typeof InputPassword>["$props"] &
+    InstanceType<typeof InputSearch>["$props"] &
     InstanceType<typeof Input>["$props"] & {
         append?: string;
         prepend?: string;
         debounce?: number;
+        formType?: "input" | "password" | "search";
+    };
+//选择器选扩展
+export type BaseModalSelect = BaseFormExtra &
+    InstanceType<typeof Input>["$props"] & {
+        modalClick?: () => void;
     };
 //多文本输入框扩展
 export type BaseFormTextarea = BaseFormExtra & InstanceType<typeof Textarea>["$props"];
@@ -111,6 +121,7 @@ export type BaseEditor = BaseFormExtra & {
 
 import { TableSortable, ButtonProps } from "@arco-design/web-vue";
 import type { Table } from "@arco-design/web-vue";
+import { VNode } from "vue";
 
 export type _TableColumn = {
     /** 类型，默认default */
@@ -210,7 +221,7 @@ export type _Btn = {
     /** 加载文案 */
     loadingText?: string;
     /** 图标 */
-    icon?: string;
+    icon?: () => VNode;
 } & ButtonProps;
 
 /** 表格tabs定义 */

@@ -25,7 +25,8 @@ import {
     BaseFormCascaderOptions,
     BaseFormCascader,
     BaseTreeSelect,
-    BaseEditor
+    BaseEditor,
+    BaseModalSelect
 } from "./types";
 import { nextTick } from "vue";
 
@@ -34,7 +35,7 @@ function genrateDateForm(label: string, field: string, dateType: DateType, extra
         ...extra,
         type: dateType,
         placeholder: extra?.placeholder ?? (dateType === "range" ? ["开始时间", "结束时间"] : "请选择"),
-        allowClear: extra?.clearable ?? true
+        allowClear: extra?.allowClear ?? true
     };
     return {
         inputType: "date",
@@ -111,7 +112,7 @@ const formHelper = {
     input(label: string, field: string, extra?: BaseFormInput) {
         extra = {
             ...extra,
-            allowClear: extra?.clearable ?? true,
+            allowClear: extra?.allowClear ?? true,
             placeholder: extra?.placeholder ?? "请输入"
         };
         return {
@@ -131,7 +132,7 @@ const formHelper = {
     textarea(label: string, field: string, extra?: BaseFormTextarea) {
         extra = {
             ...extra,
-            allowClear: extra?.clearable ?? true,
+            allowClear: extra?.allowClear ?? true,
             placeholder: extra?.placeholder ?? "请输入"
         };
         return {
@@ -175,7 +176,7 @@ const formHelper = {
         extra = {
             ...extra,
             placeholder: extra?.placeholder ?? "请选择",
-            allowClear: extra?.clearable ?? true
+            allowClear: extra?.allowClear ?? true
         };
         return {
             inputType: "time",
@@ -245,7 +246,7 @@ const formHelper = {
         extra = {
             ...extra,
             placeholder: extra?.placeholder ?? "请选择",
-            allowClear: extra?.clearable ?? true
+            allowClear: extra?.allowClear ?? true
         };
         return {
             inputType: "select",
@@ -267,7 +268,7 @@ const formHelper = {
         extra = {
             ...extra,
             placeholder: extra?.placeholder ?? "请选择",
-            allowClear: extra?.clearable ?? true
+            allowClear: extra?.allowClear ?? true
         };
         return {
             inputType: "cascader",
@@ -334,7 +335,7 @@ const formHelper = {
     inputNumber(label: string, field: string, extra?: BaseFormInputNumber) {
         extra = {
             ...extra,
-            allowClear: extra?.clearable ?? true,
+            allowClear: extra?.allowClear ?? true,
             placeholder: extra?.placeholder ?? "请输入"
         };
         return {
@@ -354,7 +355,7 @@ const formHelper = {
     treeSelect(label: string, field: string, data: TreeNodeData[], extra?: BaseTreeSelect) {
         extra = {
             ...extra,
-            allowClear: extra?.clearable ?? true,
+            allowClear: extra?.allowClear ?? true,
             placeholder: extra?.placeholder ?? "请输入"
         };
         return {
@@ -375,6 +376,19 @@ const formHelper = {
     upload(label: string, field: string, extra?: BaseFormUpload) {
         return {
             inputType: "upload",
+            label,
+            field,
+            ...extra
+        };
+    },
+    modalSelect(label: string, field: string, extra?: BaseModalSelect) {
+        extra = {
+            ...extra,
+            allowClear: extra?.allowClear ?? true,
+            placeholder: extra?.placeholder ?? "请选择"
+        };
+        return {
+            inputType: "modalSelect",
             label,
             field,
             ...extra

@@ -32,11 +32,11 @@
                                 :type="item.type || 'primary'"
                                 :status="item.status || 'normal'"
                                 :disabled="handleCheckBtnDidsable(item) || item.loading || false"
-                                :icon="item.icon"
                                 :loading="item.loading || false"
                                 @click="handleExtraButtonClick(item)"
-                                >{{ item.label }}</a-button
-                            >
+                                >{{ item.label }}
+                                <template v-if="item.icon" #icon> <component :is="item.icon" /> </template>
+                            </a-button>
                         </template>
                     </template>
                     <!-- 右侧插槽 -->
@@ -135,10 +135,11 @@
             </div>
         </div>
         <!-- 表格主体 -->
-        <div ref="baseTable" :class="['table']">
+        <div ref="baseTableWrapper" :class="['table']">
             <a-spin :loading="loading">
                 <template v-if="!tableConfig.allowFlatten || flattenType === 'list'">
                     <a-table
+                        ref="baseTable"
                         v-model:selectedKeys="selectedKeys"
                         :data="privateList"
                         :pagination="false"
@@ -177,7 +178,7 @@
                                         </template>
                                         <!-- 状态列 -->
                                         <template v-if="item.type === 'status'">
-                                            <a-badge v-bind="item.handler?.(record)"></a-badge>
+                                            <a-badge v-bind="item?.handler?.(record) || {}"></a-badge>
                                         </template>
                                         <!-- 链接列 -->
                                         <template v-if="item.type === 'link'">
@@ -254,11 +255,11 @@
                                 :type="item.type || 'primary'"
                                 :status="item.status || 'normal'"
                                 :disabled="handleCheckBtnDidsable(item) || item.loading || false"
-                                :icon="item.icon"
                                 :loading="item.loading || false"
                                 @click="handleExtraButtonClick(item)"
-                                >{{ item.label }}</a-button
-                            >
+                                >{{ item.label }}
+                                <template v-if="item.icon" #icon> {{ item.icon() }} </template>
+                            </a-button>
                         </template>
                     </a-space>
                 </template>
@@ -293,6 +294,7 @@ import { dateHelper } from "@ap/utils/dateHelper";
 import { cloneDeep, debounce, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
 import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount } from "vue";
+import { render } from "vue";
 
 defineOptions({
     name: "AroTable"
@@ -399,6 +401,7 @@ const footerIndeterminateFlag = ref(false);
 //表格高度
 const tableHeight = ref(0);
 //表格实例
+const baseTableWrapper = ref();
 const baseTable = ref();
 
 //是否开启多选
@@ -494,6 +497,9 @@ watch(
         if (newVal) {
             privateList.value = newVal;
         }
+    },
+    {
+        deep: true
     }
 );
 
@@ -634,10 +640,10 @@ const handleExtraButtonClick = (btn: _Btn): void => {
 /** 动态设置table的高度 */
 const setTableHeight = (): void => {
     nextTick(() => {
-        if (!baseTable.value) {
+        if (!baseTableWrapper.value) {
             return;
         }
-        const table = baseTable.value;
+        const table = baseTableWrapper.value;
         const footerHeight = enableFooter.value ? 65 : 0;
         let bufferValue = 0;
         if (privateTableConfig.value.allowFlatten && flattenType.value === "app") {
