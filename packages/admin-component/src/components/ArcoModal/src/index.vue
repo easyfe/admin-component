@@ -1,12 +1,14 @@
 <template>
     <a-modal :visible="computedVisible" :on-before-ok="handleOk" v-bind="privateModalConfig" @cancel="handleCancel">
         <div class="base-modal-content">
+            <component :is="props.content?.()" v-if="props.content" />
             <slot></slot>
         </div>
     </a-modal>
 </template>
 <script lang="ts" setup>
 import type { Modal } from "@arco-design/web-vue";
+import { VNode } from "vue";
 import { computed } from "vue";
 
 defineOptions({
@@ -18,11 +20,16 @@ const props = withDefaults(
         visible: boolean; //是否显示
         config?: InstanceType<typeof Modal>["$props"]; //modal配置
         ok?: () => Promise<void>; //确定方法
+        //以下用于函数式调用
+        destroy?: () => void; //销毁方法
+        content?: () => VNode; //内容
     }>(),
     {
         visible: () => false,
         config: () => <any>{},
-        ok: undefined
+        ok: undefined,
+        destroy: undefined,
+        content: undefined
     }
 );
 
@@ -33,13 +40,10 @@ const emits = defineEmits<{
     (e: "cancel"): void;
 }>();
 
-const computedVisible = computed({
-    get() {
-        return props.visible;
-    },
-    set(val) {
-        emits("update:visible", val);
-    }
+const fnVisible = ref(true);
+
+const computedVisible = computed(() => {
+    return fnVisible.value && props.visible;
 });
 
 const privateModalConfig = computed<any>(() => {
@@ -69,6 +73,13 @@ function handleCancel() {
 
 function onClose() {
     emits("update:visible", false);
+    //如果存在destroy方法，说明是函数式调用，需要手动销毁
+    if (props.destroy) {
+        fnVisible.value = false;
+        setTimeout(() => {
+            props.destroy?.();
+        }, 500);
+    }
 }
 </script>
 <style lang="scss" scoped>
