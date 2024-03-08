@@ -9,7 +9,7 @@
 <script lang="ts" setup>
 import type { Modal } from "@arco-design/web-vue";
 import { VNode } from "vue";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 defineOptions({
     name: "ArcModal"

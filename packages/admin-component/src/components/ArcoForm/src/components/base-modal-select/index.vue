@@ -10,7 +10,7 @@
     </form-item>
 </template>
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, useAttrs } from "vue";
 import FormItem from "../form-item/index.vue";
 
 const attrs: any = useAttrs();
