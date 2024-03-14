@@ -121,6 +121,7 @@ onMounted(() => {
 .efe-arco-form {
     .form-items {
         .section {
+            font-weight: bold;
             height: 42px;
             background-color: rgb(var(--gray-2));
             display: flex;
@@ -128,6 +129,15 @@ onMounted(() => {
             padding-left: 24px;
             margin-bottom: 24px;
             color: rgb(var(--gray-8));
+            &::before {
+                margin-right: 8px;
+                margin-bottom: 2px;
+                content: "";
+                display: inline-block;
+                width: 3px;
+                height: 12px;
+                background-color: rgb(var(--primary-6));
+            }
         }
         :deep(.arco-form-item-content > div) {
             width: 100%;
