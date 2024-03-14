@@ -92,7 +92,7 @@ export type DateType = "date" | "month" | "year" | "quarter" | "week" | "range";
 export type BaseFormDate = BaseFormExtra &
     InstanceType<typeof DatePicker>["$props"] & {
         allowClear?: boolean;
-        type: DateType;
+        type?: DateType;
     };
 export type BaseFormDatePicker = BaseFormDate & InstanceType<typeof DatePicker>["$props"];
 export type BaseFormMonthPicker = BaseFormDate & InstanceType<typeof MonthPicker>["$props"];
