@@ -294,7 +294,6 @@ import { dateHelper } from "@ap/utils/dateHelper";
 import { cloneDeep, debounce, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
 import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount } from "vue";
-import { render } from "vue";
 
 defineOptions({
     name: "AroTable"
@@ -720,7 +719,8 @@ function getSplitDate(value: string | number, item?: any) {
 }
 
 defineExpose({
-    refresh
+    refresh,
+    baseTable
 });
 
 onMounted(() => {
