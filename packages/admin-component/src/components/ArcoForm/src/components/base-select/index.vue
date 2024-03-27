@@ -16,7 +16,7 @@ const props = withDefaults(
         modelValue?: string | number | number[] | string[];
     }>(),
     {
-        modelValue: ""
+        modelValue: [] as any
     }
 );
 const emits = defineEmits<{
