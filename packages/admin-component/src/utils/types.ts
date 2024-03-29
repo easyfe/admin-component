@@ -30,7 +30,7 @@ export type BaseFormExtra = {
     if?: boolean | ((...args: any) => boolean);
     span?: number;
     labelTips?: string | (() => string);
-    inputTips?: string | (() => string);
+    inputTips?: string | (() => string | VNode);
     width?: string | number;
     disabled?: boolean;
 } & InstanceType<typeof FormItem>["$props"];

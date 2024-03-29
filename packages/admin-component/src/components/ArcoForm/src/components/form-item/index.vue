@@ -4,13 +4,13 @@
             <slot></slot>
         </div>
         <template v-if="attrs.inputTips" #extra>
-            <form-extra :tips="getStringValue(attrs.inputTips)"></form-extra>
+            <form-extra :tips="attrs.inputTips"></form-extra>
         </template>
         <template v-if="attrs.labelTips" #label>
             {{ attrs.label }}
             <a-tooltip>
                 <template #content>
-                    <rich-text :content="getStringValue(attrs.labelTips)"></rich-text>
+                    <rich-text :content="getLabelTips(attrs.labelTips)"></rich-text>
                 </template>
                 <icon-question-circle-fill />
             </a-tooltip>
@@ -59,7 +59,7 @@ const getSlotStyle = computed(() => {
     };
 });
 
-function getStringValue(value: string | (() => string)) {
+function getLabelTips(value: string | (() => string)) {
     if (typeof value === "string") {
         return value;
     }
