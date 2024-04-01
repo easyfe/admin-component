@@ -24,6 +24,8 @@
             <!-- table右上角功能按钮 -->
             <div class="btns">
                 <a-space>
+                    <!-- 右侧插槽 -->
+                    <slot name="trBtns"></slot>
                     <template v-if="btnsShow">
                         <template v-for="(item, index) in privateTableConfig?.trBtns">
                             <a-button
@@ -38,9 +40,12 @@
                                 <template v-if="item.icon" #icon> <component :is="item.icon" /> </template>
                             </a-button>
                         </template>
+                        <a-button v-if="privateTableConfig.showRefresh" @click="onRefresh">
+                            <template #icon>
+                                <icon-refresh></icon-refresh>
+                            </template>
+                        </a-button>
                     </template>
-                    <!-- 右侧插槽 -->
-                    <slot name="trBtns"></slot>
                     <!-- 列表展示方式 -->
                     <a-radio-group
                         v-if="privateTableConfig.allowFlatten"
@@ -293,6 +298,7 @@ import {
 import { dateHelper } from "@ap/utils/dateHelper";
 import { cloneDeep, debounce, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
+import { IconRefresh } from "@arco-design/web-vue/es/icon";
 import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount } from "vue";
 
 defineOptions({
@@ -439,6 +445,9 @@ const tabsShow = computed(() => {
 
 /** 是否显示右上角按钮组 */
 const btnsShow = computed(() => {
+    if (privateTableConfig.value.showRefresh) {
+        return true;
+    }
     if (!privateTableConfig.value?.trBtns) {
         return false;
     }
@@ -716,6 +725,14 @@ function getSplitDate(value: string | number, item?: any) {
         return [v];
     }
     return v.split(split);
+}
+
+function onRefresh() {
+    if (privateTableConfig.value.refreshFn) {
+        privateTableConfig.value.refreshFn();
+    } else {
+        refresh();
+    }
 }
 
 defineExpose({

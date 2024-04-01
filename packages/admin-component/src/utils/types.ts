@@ -166,6 +166,10 @@ export type _TableColumn = {
 
 /** 表格配置定义 */
 export type _TableConfig = {
+    //自定义刷新方法
+    refreshFn?: () => void;
+    //是否显示重置按钮
+    showRefresh?: boolean;
     //是否自动最大高度
     autoMaxHeight?: boolean;
     /** 左上角标签 */
