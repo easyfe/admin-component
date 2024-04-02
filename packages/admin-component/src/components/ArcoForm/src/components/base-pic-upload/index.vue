@@ -1,10 +1,14 @@
 <template>
     <form-item>
         <a-upload
-            v-model:file-list="model"
+            list-type="picture-card"
+            :image-preview="true"
+            :default-file-list="fileList"
+            accept="image/*"
             :on-before-upload="onBeforeUpload"
+            :on-before-remove="onBeforeRemove"
             v-bind="$attrs"
-            @exceed-limit="onExceedLimit"
+            @success="onSuccess"
         ></a-upload>
     </form-item>
 </template>
@@ -17,16 +21,16 @@ import "@arco-design/web-vue/es/upload/style/css";
 import "@arco-design/web-vue/es/image/style/css";
 
 defineOptions({
-    name: "Upload"
+    name: "PicUpload"
 });
 
 const props = withDefaults(
     defineProps<{
-        modelValue: FileItem[];
+        modelValue: string | string[];
         maxSize?: number;
     }>(),
     {
-        modelValue: () => [],
+        modelValue: () => "",
         maxSize: 0
     }
 );
@@ -40,6 +44,29 @@ const model = computed({
     },
     set: (newVal) => {
         emits("update:modelValue", newVal);
+    }
+});
+
+const fileList = computed<any[]>(() => {
+    if (!model.value) return [];
+    if (Array.isArray(model.value)) {
+        return model.value.map((item) => {
+            return {
+                uid: item,
+                name: item,
+                status: "done",
+                url: item
+            };
+        });
+    } else {
+        return [
+            {
+                uid: model.value,
+                name: model.value,
+                status: "done",
+                url: model.value
+            }
+        ];
     }
 });
 
@@ -70,8 +97,25 @@ function onBeforeUpload(file: File): Promise<boolean> {
     });
 }
 
-function onExceedLimit() {
-    Message.error("超出文件数量限制");
+function onBeforeRemove(file: FileItem): Promise<boolean> {
+    return new Promise((resolve) => {
+        const index = fileList.value.findIndex((item) => item.url === file.url);
+        if (index > -1) {
+            fileList.value.splice(index, 1);
+            model.value = fileList.value.map((item) => item.url);
+        }
+        resolve(true);
+    });
+}
+
+function onSuccess(file: FileItem): void {
+    if (file.url) {
+        if (Array.isArray(model.value)) {
+            model.value.push(file.url);
+        } else {
+            model.value = file.url;
+        }
+    }
 }
 </script>
 
