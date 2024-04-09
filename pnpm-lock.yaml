@@ -102,8 +102,8 @@ importers:
   packages/admin-component:
     dependencies:
       '@arco-design/web-vue':
-        specifier: ^2.54.6
-        version: 2.54.6(vue@3.3.4)
+        specifier: latest
+        version: 2.55.1(vue@3.3.4)
       '@tinymce/tinymce-vue':
         specifier: ^5.1.0
         version: 5.1.0(vue@3.3.4)
@@ -133,7 +133,7 @@ importers:
     dependencies:
       '@arco-design/web-vue':
         specifier: latest
-        version: 2.54.6(vue@3.3.4)
+        version: 2.55.1(vue@3.3.4)
       '@easyfe/admin-component':
         specifier: workspace:*
         version: link:../admin-component
@@ -333,8 +333,8 @@ packages:
       color: 3.2.1
     dev: false
 
-  /@arco-design/web-vue@2.54.6(vue@3.3.4):
-    resolution: {integrity: sha512-Qx+HHL5G5gIvrbxGC6ZF/L8ACD1L/RkPJd9e4SR+vI6lEg+nGlUBplkR4pY7e7mqYXY2H6uzh+radT+QxXKVRg==}
+  /@arco-design/web-vue@2.55.1(vue@3.3.4):
+    resolution: {integrity: sha512-MI0mteI4B1+UAKAslCrV2zqRKHWwkjLjdOpOLAR36cAbYhtlj7Tel3yAjGHk5zsQ1ODZX60OFfRfl66pq6919A==}
     peerDependencies:
       vue: ^3.1.0
     dependencies:

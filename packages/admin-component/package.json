@@ -23,7 +23,7 @@
         "lodash-es": "^4.17.21",
         "tinymce": "^6.7.2",
         "vue-dompurify-html": "^4.1.4",
-        "@arco-design/web-vue": "^2.54.6",
+        "@arco-design/web-vue": "latest",
         "vue": "^3.2.23"
     },
     "peerDependencies": {}
