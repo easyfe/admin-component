@@ -659,7 +659,7 @@ const setTableHeight = (): void => {
         if (maxHeight === "auto") {
             const table = baseTableWrapper.value;
             const footerHeight = enableFooter.value ? 65 : 0;
-            const parentNode = table.parentNode.parentNode;
+            const parentNode = document.getElementsByClassName("frame-view-content")?.[0];
             let paddingBottom = 0;
             let marginBottom = 0;
             if (parentNode) {
