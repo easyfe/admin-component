@@ -659,7 +659,26 @@ const setTableHeight = (): void => {
         if (maxHeight === "auto") {
             const table = baseTableWrapper.value;
             const footerHeight = enableFooter.value ? 65 : 0;
-            tableHeight.value = window.innerHeight - table.getBoundingClientRect().top - footerHeight + "px";
+            const parentNode = table.parentNode.parentNode;
+            let paddingBottom = 0;
+            let marginBottom = 0;
+            if (parentNode) {
+                const paddingBottomStr = window.getComputedStyle(parentNode, null).getPropertyValue("padding-bottom");
+                const marginBottomStr = window.getComputedStyle(parentNode, null).getPropertyValue("margin-bottom");
+                if (paddingBottomStr) {
+                    paddingBottom = parseFloat(paddingBottomStr.replace("px", ""));
+                }
+                if (marginBottomStr) {
+                    marginBottom = parseFloat(marginBottomStr.replace("px", ""));
+                }
+            }
+            tableHeight.value =
+                window.innerHeight -
+                table.getBoundingClientRect().top -
+                footerHeight -
+                paddingBottom -
+                marginBottom +
+                "px";
         } else if (typeof maxHeight === "number") {
             tableHeight.value = maxHeight + "px";
         } else if (typeof maxHeight === "string") {
