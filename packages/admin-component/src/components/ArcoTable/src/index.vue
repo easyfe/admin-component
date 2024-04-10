@@ -358,16 +358,17 @@ const privateTableConfig = computed<_TableConfig>(() => {
         totalKey: "total",
         allowFlatten: false,
         selectLimit: 0,
+        showRefresh: true,
         arcoProps: {
             rowKey: "id"
         }
     };
-    if (props.tableConfig.autoMaxHeight) {
+    if (props.tableConfig.maxHeight) {
         defaultTableConfig.arcoProps = {
             ...defaultTableConfig.arcoProps,
             scroll: {
                 ...defaultTableConfig.arcoProps.scroll,
-                y: tableHeight.value
+                maxHeight: tableHeight.value
             }
         };
     }
@@ -375,9 +376,9 @@ const privateTableConfig = computed<_TableConfig>(() => {
 });
 
 const getAppListStyle = computed<any>(() => {
-    if (privateTableConfig.value.autoMaxHeight) {
+    if (privateTableConfig.value.maxHeight) {
         return {
-            maxHeight: tableHeight.value + "px",
+            maxHeight: tableHeight.value,
             overflowY: "auto"
         };
     }
@@ -404,7 +405,7 @@ const footerCheckAllFlag = ref(false);
 /** 底部多选复选框不确定状态 */
 const footerIndeterminateFlag = ref(false);
 //表格高度
-const tableHeight = ref(0);
+const tableHeight = ref("");
 //表格实例
 const baseTableWrapper = ref();
 const baseTable = ref();
@@ -651,18 +652,21 @@ const setTableHeight = (): void => {
         if (!baseTableWrapper.value) {
             return;
         }
-        const table = baseTableWrapper.value;
-        const footerHeight = enableFooter.value ? 65 : 0;
-        let bufferValue = 0;
-        if (privateTableConfig.value.allowFlatten && flattenType.value === "app") {
-            bufferValue = 0;
-        } else {
-            //table模式下，需要加上表头的高度
-            bufferValue = 40;
+        const maxHeight = privateTableConfig.value.maxHeight;
+        if (!maxHeight) {
+            return;
         }
-        //padding24和margin20
-        tableHeight.value =
-            window.innerHeight - table.getBoundingClientRect().top - 24 - 20 - bufferValue - footerHeight;
+        if (maxHeight === "auto") {
+            const table = baseTableWrapper.value;
+            const footerHeight = enableFooter.value ? 65 : 0;
+            tableHeight.value = window.innerHeight - table.getBoundingClientRect().top - footerHeight + "px";
+        } else if (typeof maxHeight === "number") {
+            tableHeight.value = maxHeight + "px";
+        } else if (typeof maxHeight === "string") {
+            tableHeight.value = maxHeight;
+        } else {
+            console.error("maxHeight类型错误:", maxHeight);
+        }
     });
 };
 

@@ -35,24 +35,26 @@
 
 ### TableConfig
 
-| 参数               | 说明                                                           | 类型                                   | 默认值 | 必填 |
-| ------------------ | -------------------------------------------------------------- | -------------------------------------- | ------ | ---- |
-| autoMaxHeight      | 是否自动最大高度                                               | boolean                                | -      | 否   |
-| tlBtns             | 左上角标签                                                     | \_Tabs                                 | -      | 否   |
-| trBtns             | 右上角按钮                                                     | \_Btn[]                                | -      | 否   |
-| blBtns             | 左下角按钮                                                     | \_Btn[]                                | -      | 否   |
-| disableSelectedRow | 是否禁用选中行                                                 | boolean                                | -      | 否   |
-| columns            | 列表组                                                         | \_TableColumn[]                        | -      | 否   |
-| rowKey             | 数据存在的key                                                   | string                                 | -      | 否   |
-| totalKey           | 总数key                                                         | string                                 | -      | 否   |
-| active             | 焦点key                                                         | string \| number                       | -      | 否   |
-| sizeList           | 分页数量                                                       | number[]                               | -      | 否   |
-| size               | 当前分页                                                       | number                                 | -      | 否   |
-| pageKey            | 分页page变量                                                    | string                                 | -      | 否   |
-| sizeKey            | 分页size变量                                                    | string                                 | -      | 否   |
-| selectLimit        | 最大选择数量                                                   | number                                 | -      | 否   |
-| allowFlatten       | 是否允许平铺                                                   | boolean                                | -      | 否   |
-| arcoProps          | 表格props                                                       | `InstanceType<typeof Table>["$props"]` | -      | 是   |
+| 参数               | 说明           | 类型                                   | 默认值 | 必填 |
+| ------------------ | -------------- | -------------------------------------- | ------ | ---- |
+| maxHeight          | 表格高度       | string\|number\|'auto'                 | -      | 否   |
+| showRefresh        | 显示刷新按钮   | boolean                                | true   | 否   |
+| refreshFn          | 自定义刷新方法 | Function                               | -      | 否   |
+| tlBtns             | 左上角标签     | \_Tabs                                 | -      | 否   |
+| trBtns             | 右上角按钮     | \_Btn[]                                | -      | 否   |
+| blBtns             | 左下角按钮     | \_Btn[]                                | -      | 否   |
+| disableSelectedRow | 是否禁用选中行 | boolean                                | -      | 否   |
+| columns            | 列表组         | \_TableColumn[]                        | -      | 否   |
+| rowKey             | 数据存在的key  | string                                 | -      | 否   |
+| totalKey           | 总数key        | string                                 | -      | 否   |
+| active             | 焦点key        | string \| number                       | -      | 否   |
+| sizeList           | 分页数量       | number[]                               | -      | 否   |
+| size               | 当前分页       | number                                 | -      | 否   |
+| pageKey            | 分页page变量   | string                                 | -      | 否   |
+| sizeKey            | 分页size变量   | string                                 | -      | 否   |
+| selectLimit        | 最大选择数量   | number                                 | -      | 否   |
+| allowFlatten       | 是否允许平铺   | boolean                                | -      | 否   |
+| arcoProps          | 表格props      | `InstanceType<typeof Table>["$props"]` | -      | 是   |
 
 
 ### TableReq
@@ -100,6 +102,7 @@
 
 ## 外部调用 defineExpose
 
-|  事件名   |   说明   |                  参数说明                  |
-| :-------: | :------: | :----------------------------------------: |
-| `refresh` | 刷新表格 | 外部通过 ref，调用该方法，可以主动刷新表格 |
+|    名称     |      说明      |                  参数说明                  |
+| :---------: | :------------: | :----------------------------------------: |
+|  `refresh`  |    刷新表格    | 外部通过 ref，调用该方法，可以主动刷新表格 |
+| `baseTable` | arco-table实例 |      可以通过该实例调用arco-table方法      |

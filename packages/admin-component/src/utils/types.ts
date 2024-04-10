@@ -170,8 +170,8 @@ export type _TableConfig = {
     refreshFn?: () => void;
     //是否显示重置按钮
     showRefresh?: boolean;
-    //是否自动最大高度
-    autoMaxHeight?: boolean;
+    //表格最大高度
+    maxHeight?: number | string | "auto";
     /** 左上角标签 */
     tlBtns?: _Tabs;
     /** 右上角按钮 */
