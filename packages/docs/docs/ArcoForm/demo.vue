@@ -2,7 +2,7 @@
     <div>
         <arco-form ref="form" v-model="formData" :config="formConfig">
             <template #s1>
-                <a-form-item label="插槽"> 这是自定义插槽 </a-form-item>
+                <a-form-item label="插槽"> 这是自定义插槽 {{ formData }}</a-form-item>
             </template>
         </arco-form>
         <a-button @click="testFn">提交</a-button>
@@ -31,7 +31,9 @@ const formConfig = computed(() => {
             showWordLimit: true,
             rules: [ruleHelper.require("必填", "blur")],
             labelTips: `提示内容第一点`,
-            inputTips: `示文案这是示文案是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案`
+            // inputTips: () => "tttt"
+            inputTips: () => h("div", "提示内容第二点")
+            // inputTips: `示文案这是示文案是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案`
         }),
         formHelper.color("颜色", "key8", {
             defaultColor: "#f5511e"
@@ -64,7 +66,7 @@ const formConfig = computed(() => {
                 ]
             }
         ),
-        formHelper.upload("图片", "key12", {
+        formHelper.picUpload("图片", "key12", {
             inputTips: "推荐使用400*400的图片",
             customRequest: uploadFile
         }),
@@ -114,6 +116,15 @@ const formConfig = computed(() => {
                 key: 2
             }
         ]),
+        formHelper.select(
+            "多选下拉框",
+            "key20",
+            [
+                { label: "复选1", value: 1 },
+                { label: "复选2", value: 2 }
+            ],
+            { multiple: true }
+        ),
         formHelper.editor("富文本", "key6", {
             uploadProps: {
                 customRequest: uploadFile

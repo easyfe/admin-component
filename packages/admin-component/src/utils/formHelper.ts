@@ -381,6 +381,28 @@ const formHelper = {
             ...extra
         };
     },
+    /**
+     * 图片上传
+     * @param label
+     * @param field
+     * @param extra
+     * @returns
+     */
+    picUpload(label: string, field: string, extra?: BaseFormUpload) {
+        return {
+            inputType: "picUpload",
+            label,
+            field,
+            ...extra
+        };
+    },
+    /**
+     * 弹窗选择器
+     * @param label
+     * @param field
+     * @param extra
+     * @returns
+     */
     modalSelect(label: string, field: string, extra?: BaseModalSelect) {
         extra = {
             ...extra,

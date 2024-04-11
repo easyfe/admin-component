@@ -14,6 +14,7 @@ const list: Record<string, any> = {
     select: defineAsyncComponent(() => import("./base-select/index.vue")),
     editor: defineAsyncComponent(() => import("./base-editor/index.vue")),
     upload: defineAsyncComponent(() => import("./base-upload/index.vue")),
+    picUpload: defineAsyncComponent(() => import("./base-pic-upload/index.vue")),
     cascader: defineAsyncComponent(() => import("./base-cascader/index.vue")),
     treeSelect: defineAsyncComponent(() => import("./base-tree-select/index.vue")),
     modalSelect: defineAsyncComponent(() => import("./base-modal-select/index.vue"))
