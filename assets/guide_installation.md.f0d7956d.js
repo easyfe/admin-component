@@ -1,0 +1,19 @@
+import{_ as a,c as s,o as n,O as e}from"./chunks/framework.e8766f7a.js";const y=JSON.parse('{"title":"快速开始","description":"","frontmatter":{},"headers":[],"relativePath":"guide/installation.md","filePath":"guide/installation.md"}'),l={name:"guide/installation.md"},p=e(`<h1 id="快速开始" tabindex="-1">快速开始 <a class="header-anchor" href="#快速开始" aria-label="Permalink to &quot;快速开始&quot;">​</a></h1><h2 id="vue-版本" tabindex="-1">Vue 版本 <a class="header-anchor" href="#vue-版本" aria-label="Permalink to &quot;Vue 版本&quot;">​</a></h2><p>vue &gt;= 3.2.0</p><p><strong>注意</strong>：跟随 Arco.design，由于 <code>Vue3</code> 不再支持 IE 浏览器环境，ArcoVue 也不再支持 IE 浏览器环境。</p><h2 id="安装" tabindex="-1">安装 <a class="header-anchor" href="#安装" aria-label="Permalink to &quot;安装&quot;">​</a></h2><div class="language-lang vp-adaptive-theme line-numbers-mode"><button title="Copy Code" class="copy"></button><span class="lang">lang</span><pre class="shiki vitesse-dark vp-code-dark"><code><span class="line"><span style="color:#dbd7caee;"># pnpm(推荐)</span></span>
+<span class="line"><span style="color:#dbd7caee;">pnpm add @easyfe/admin-component</span></span>
+<span class="line"><span style="color:#dbd7caee;"></span></span>
+<span class="line"><span style="color:#dbd7caee;"># npm</span></span>
+<span class="line"><span style="color:#dbd7caee;">npm install @easyfe/admin-component</span></span>
+<span class="line"><span style="color:#dbd7caee;"></span></span>
+<span class="line"><span style="color:#dbd7caee;"># yarn</span></span>
+<span class="line"><span style="color:#dbd7caee;">yarn add @easyfe/admin-component</span></span></code></pre><pre class="shiki vitesse-light vp-code-light"><code><span class="line"><span style="color:#393a34;"># pnpm(推荐)</span></span>
+<span class="line"><span style="color:#393a34;">pnpm add @easyfe/admin-component</span></span>
+<span class="line"><span style="color:#393a34;"></span></span>
+<span class="line"><span style="color:#393a34;"># npm</span></span>
+<span class="line"><span style="color:#393a34;">npm install @easyfe/admin-component</span></span>
+<span class="line"><span style="color:#393a34;"></span></span>
+<span class="line"><span style="color:#393a34;"># yarn</span></span>
+<span class="line"><span style="color:#393a34;">yarn add @easyfe/admin-component</span></span></code></pre><div class="line-numbers-wrapper" aria-hidden="true"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><h2 id="使用" tabindex="-1">使用 <a class="header-anchor" href="#使用" aria-label="Permalink to &quot;使用&quot;">​</a></h2><div class="language-lang vp-adaptive-theme line-numbers-mode"><button title="Copy Code" class="copy"></button><span class="lang">lang</span><pre class="shiki vitesse-dark vp-code-dark"><code><span class="line"><span style="color:#dbd7caee;">全局样式引入</span></span>
+<span class="line"><span style="color:#dbd7caee;"></span></span>
+<span class="line"><span style="color:#dbd7caee;">import &quot;@easyfe/admin-component/dist/style.css&quot;;</span></span></code></pre><pre class="shiki vitesse-light vp-code-light"><code><span class="line"><span style="color:#393a34;">全局样式引入</span></span>
+<span class="line"><span style="color:#393a34;"></span></span>
+<span class="line"><span style="color:#393a34;">import &quot;@easyfe/admin-component/dist/style.css&quot;;</span></span></code></pre><div class="line-numbers-wrapper" aria-hidden="true"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div>`,8),o=[p];function c(t,i,r,d,m,u){return n(),s("div",null,o)}const h=a(l,[["render",c]]);export{y as __pageData,h as default};
