@@ -677,7 +677,8 @@ const setTableHeight = (): void => {
                 table.getBoundingClientRect().top -
                 footerHeight -
                 paddingBottom -
-                marginBottom +
+                marginBottom -
+                2 +
                 "px";
         } else if (typeof maxHeight === "number") {
             tableHeight.value = maxHeight + "px";
