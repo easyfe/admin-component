@@ -1,5 +1,6 @@
 import { Modal } from "@arco-design/web-vue";
 import { render, createVNode } from "vue";
+import { useStore } from "./store";
 export const modalShow = (ModalNode: any, opt: Record<string, any>) => {
     const container = document.createElement("div");
     const handleDestroy = () => {
@@ -21,3 +22,11 @@ export const modalShow = (ModalNode: any, opt: Record<string, any>) => {
     render(vnode, container);
     document.body.appendChild(container);
 };
+const { config } = useStore();
+
+export function getI18nValue(key: string) {
+    if (config.i18n?.global?.t) {
+        return config.i18n.global?.t(key);
+    }
+    return key;
+}

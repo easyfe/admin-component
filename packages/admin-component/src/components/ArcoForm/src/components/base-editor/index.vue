@@ -36,7 +36,7 @@ const props = withDefaults(
     }>(),
     {
         modelValue: () => "",
-        placeholder: () => "请输入",
+        placeholder: () => "",
         theme: () => "light",
         language: () => "zh-Hans",
         uploadProps: () => ({})

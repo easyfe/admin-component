@@ -731,11 +731,10 @@ function getColumnConfig(item: _TableColumn) {
     if (item.type !== "btns") {
         config = {
             ...config,
-            ...{
-                tooltip: item.tooltip || { position: "top" },
-                showOverflowTooltip: true,
-                sortable: item.sortable
-            }
+            tooltip: item.tooltip || { position: "top" },
+            showOverflowTooltip: true,
+            ...item,
+            dataIndex: item.prop
         };
     }
     return config;
@@ -800,6 +799,10 @@ onBeforeUnmount(() => {
         margin-bottom: 16px;
         .tabs {
             user-select: none;
+            flex: 1;
+            :deep(.arco-form-item) {
+                margin-bottom: 0;
+            }
             .tabs-count {
                 color: #f56c6c;
             }

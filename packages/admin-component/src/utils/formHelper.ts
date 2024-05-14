@@ -29,12 +29,15 @@ import {
     BaseModalSelect
 } from "./types";
 import { nextTick } from "vue";
+import { getI18nValue } from "./util";
 
 function genrateDateForm(label: string, field: string, dateType: DateType, extra?: Record<string, any>) {
     extra = {
         ...extra,
         type: dateType,
-        placeholder: extra?.placeholder ?? (dateType === "range" ? ["开始时间", "结束时间"] : "请选择"),
+        placeholder:
+            extra?.placeholder ??
+            (dateType === "range" ? [getI18nValue("开始时间"), getI18nValue("结束时间")] : getI18nValue("请选择")),
         allowClear: extra?.allowClear ?? true
     };
     return {
@@ -113,7 +116,7 @@ const formHelper = {
         extra = {
             ...extra,
             allowClear: extra?.allowClear ?? true,
-            placeholder: extra?.placeholder ?? "请输入"
+            placeholder: extra?.placeholder ?? getI18nValue("请输入")
         };
         return {
             inputType: "input",
@@ -133,7 +136,7 @@ const formHelper = {
         extra = {
             ...extra,
             allowClear: extra?.allowClear ?? true,
-            placeholder: extra?.placeholder ?? "请输入"
+            placeholder: extra?.placeholder ?? getI18nValue("请输入")
         };
         return {
             inputType: "textarea",
@@ -175,7 +178,7 @@ const formHelper = {
     time(label: string, field: string, extra?: BaseFormTime) {
         extra = {
             ...extra,
-            placeholder: extra?.placeholder ?? "请选择",
+            placeholder: extra?.placeholder ?? getI18nValue("请选择"),
             allowClear: extra?.allowClear ?? true
         };
         return {
@@ -245,7 +248,7 @@ const formHelper = {
     select(label: string, field: string, options: BaseFormSelectOptions[], extra?: BaseFormSelect) {
         extra = {
             ...extra,
-            placeholder: extra?.placeholder ?? "请选择",
+            placeholder: extra?.placeholder ?? getI18nValue("请选择"),
             allowClear: extra?.allowClear ?? true
         };
         return {
@@ -267,7 +270,7 @@ const formHelper = {
     cascader(label: string, field: string, options: BaseFormCascaderOptions[], extra?: BaseFormCascader) {
         extra = {
             ...extra,
-            placeholder: extra?.placeholder ?? "请选择",
+            placeholder: extra?.placeholder ?? getI18nValue("请选择"),
             allowClear: extra?.allowClear ?? true
         };
         return {
@@ -336,7 +339,7 @@ const formHelper = {
         extra = {
             ...extra,
             allowClear: extra?.allowClear ?? true,
-            placeholder: extra?.placeholder ?? "请输入"
+            placeholder: extra?.placeholder ?? getI18nValue("请输入")
         };
         return {
             inputType: "inputNumber",
@@ -356,7 +359,7 @@ const formHelper = {
         extra = {
             ...extra,
             allowClear: extra?.allowClear ?? true,
-            placeholder: extra?.placeholder ?? "请输入"
+            placeholder: extra?.placeholder ?? getI18nValue("请输入")
         };
         return {
             inputType: "treeSelect",
@@ -407,7 +410,7 @@ const formHelper = {
         extra = {
             ...extra,
             allowClear: extra?.allowClear ?? true,
-            placeholder: extra?.placeholder ?? "请选择"
+            placeholder: extra?.placeholder ?? getI18nValue("请选择")
         };
         return {
             inputType: "modalSelect",

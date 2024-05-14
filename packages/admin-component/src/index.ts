@@ -33,7 +33,8 @@ export * from "./components/ArcoModal";
 import { formHelper } from "./utils/formHelper";
 import { tableHelper } from "./utils/tableHelper";
 import { ruleHelper } from "./utils/ruleHelper";
+import { useStore } from "./utils/store";
 
-export { formHelper, tableHelper, ruleHelper };
+export { formHelper, tableHelper, ruleHelper, useStore };
 
 import "./style/index.scss";

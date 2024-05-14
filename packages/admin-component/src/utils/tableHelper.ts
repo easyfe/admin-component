@@ -1,4 +1,4 @@
-import { ButtonProps } from "@arco-design/web-vue";
+import { ButtonProps, TableColumnInstance } from "@arco-design/web-vue";
 import { _TableConfig } from "./types";
 
 export type BaseTableColunmExtra = {
@@ -9,9 +9,8 @@ export type BaseTableColunmExtra = {
     rightExtra?: string | number;
     minWidth?: string | number;
     fixed?: true | "left" | "right";
-    sort?: true | false | "custom";
     color?: string;
-};
+} & TableColumnInstance["$props"];
 export type BaseTableColunmBtn = {
     /** 标签（按钮文字） */
     label: string | ((row: Record<string, any>, index: number) => string);
