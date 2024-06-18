@@ -147,10 +147,34 @@ const tableHelper = {
             ...extra
         };
     },
+    /**
+     * 链接列
+     * @param label
+     * @param prop
+     * @param handler
+     * @param extra
+     * @returns
+     */
     link(label: string, prop: string, handler: (item: Record<string, any>) => void, extra?: BaseTableColunmExtra): any {
         return {
             type: "link",
             handler,
+            label,
+            prop,
+            ...extra
+        };
+    },
+    /**
+     * html列
+     * @param label
+     * @param prop
+     * @param handler
+     * @param extra
+     * @returns
+     */
+    html(label: string, prop: string, extra?: BaseTableColunmExtra): any {
+        return {
+            type: "html",
             label,
             prop,
             ...extra

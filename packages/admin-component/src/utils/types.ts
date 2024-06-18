@@ -125,7 +125,8 @@ import { VNode } from "vue";
 
 export type _TableColumn = {
     /** 类型，默认default */
-    type?: "default" | "slot" | "btns" | "image" | "time" | "dictionary" | "date" | "status" | "link";
+    type?: "default" | "slot" | "btns" | "image" | "time" | "dictionary" | "date" | "status" | "link" | "html";
+
     /** prop */
     prop: string;
     /** 标签 */

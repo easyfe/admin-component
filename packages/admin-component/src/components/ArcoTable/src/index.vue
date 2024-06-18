@@ -197,6 +197,10 @@
                                                 }}
                                             </a-link>
                                         </template>
+                                        <!-- html列 -->
+                                        <template v-if="item.type === 'html'">
+                                            <rich-text :content="record[item.prop]"></rich-text>
+                                        </template>
                                         <!-- 操作按钮组 -->
                                         <a-space v-if="item.type === 'btns'" class="column-btns">
                                             <template v-for="(btn_item, btn_index) in item.btns">
@@ -299,6 +303,7 @@ import { dateHelper } from "@ap/utils/dateHelper";
 import { cloneDeep, debounce, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
 import { IconRefresh } from "@arco-design/web-vue/es/icon";
+import { RichText } from "@ap/components/RichText";
 import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount } from "vue";
 
 defineOptions({

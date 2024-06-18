@@ -1,5 +1,5 @@
 <template>
-    <div v-dompurify-html="content"></div>
+    <div v-dompurify-html="content" class="rich-text"></div>
 </template>
 
 <script lang="ts" setup>
@@ -20,5 +20,8 @@ defineProps({
 <style lang="scss" scoped>
 :deep(img) {
     max-width: 100%;
+}
+.rich-text {
+    white-space: normal;
 }
 </style>
