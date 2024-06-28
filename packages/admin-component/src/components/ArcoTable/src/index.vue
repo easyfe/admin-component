@@ -202,24 +202,13 @@
                                             <rich-text :content="record[item.prop]"></rich-text>
                                         </template>
                                         <!-- 操作按钮组 -->
-                                        <a-space v-if="item.type === 'btns'" class="column-btns">
-                                            <template v-for="(btn_item, btn_index) in item.btns">
-                                                <a-link
-                                                    v-if="handleCheckColumnBtnIf(record, rowIndex, btn_item)"
-                                                    :key="btn_index"
-                                                    class="btn handle-btns"
-                                                    :disabled="handleCheckColumnBtnDidsable(record, rowIndex, btn_item)"
-                                                    :style="{
-                                                        color:
-                                                            btn_item.color && !btn_item.disabled ? btn_item.color : ''
-                                                    }"
-                                                    :status="btn_item.status || 'normal'"
-                                                    type="text"
-                                                    @click.stop="handleClickColumnBtn(record, rowIndex, btn_item)"
-                                                    >{{ handleSetColumnBtnLabel(record, rowIndex, btn_item) }}
-                                                </a-link>
-                                            </template>
-                                        </a-space>
+                                        <template v-if="item.type === 'btns'">
+                                            <column-btns
+                                                :btns="item.btns"
+                                                :record="record"
+                                                :rowIndex="rowIndex"
+                                            ></column-btns>
+                                        </template>
                                     </template>
                                 </a-table-column>
                             </template>
@@ -291,20 +280,14 @@
 <script lang="ts" setup>
 import { _Btn, _TableColumn, _TableConfig, _TableReq } from "@ap/utils/types";
 import { BaseTableColunmBtn } from "@ap/utils/tableHelper";
-import {
-    handleCheckBtnIf,
-    handleCheckBtnDidsable,
-    handleCheckColumnBtnIf,
-    handleCheckColumnBtnDidsable,
-    handleSetColumnBtnLabel,
-    arrIncludes
-} from "./util";
+import { handleCheckBtnIf, handleCheckBtnDidsable, arrIncludes } from "./util";
 import { dateHelper } from "@ap/utils/dateHelper";
 import { cloneDeep, debounce, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
 import { IconRefresh } from "@arco-design/web-vue/es/icon";
 import { RichText } from "@ap/components/RichText";
 import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount } from "vue";
+import ColumnBtns from "./components/column-btns/index.vue";
 
 defineOptions({
     name: "AroTable"

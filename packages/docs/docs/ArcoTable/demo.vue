@@ -102,6 +102,21 @@ const getConfig = computed(() => {
                     {
                         label: "删除",
                         status: "danger"
+                    },
+                    {
+                        label: "删除2",
+                        status: "danger",
+                        collapse: true
+                    },
+                    {
+                        label: "删除3",
+                        status: "danger",
+                        collapse: true
+                    },
+                    {
+                        label: "删除4",
+                        status: "danger",
+                        collapse: true
                     }
                 ],
                 {
