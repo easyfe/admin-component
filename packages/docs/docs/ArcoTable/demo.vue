@@ -106,16 +106,34 @@ const getConfig = computed(() => {
                     {
                         label: "删除2",
                         status: "danger",
+                        if: (row, index) => {
+                            if (index === 1) {
+                                return false;
+                            }
+                            return true;
+                        },
                         collapse: true
                     },
                     {
                         label: "删除3",
                         status: "danger",
+                        if: (row, index) => {
+                            if (index === 1) {
+                                return false;
+                            }
+                            return true;
+                        },
                         collapse: true
                     },
                     {
                         label: "删除4",
                         status: "danger",
+                        if: (row, index) => {
+                            if (index === 1) {
+                                return false;
+                            }
+                            return true;
+                        },
                         collapse: true
                     }
                 ],

@@ -58,6 +58,7 @@ const props = withDefaults(
 
 let commonBtns = ref<BaseTableColunmBtn[]>([]);
 let collspaceBtns = ref<BaseTableColunmBtn[]>([]);
+let collspaceShow = ref(false);
 
 watchEffect(() => {
     if (!props.btns?.length) {
@@ -65,13 +66,16 @@ watchEffect(() => {
     }
     commonBtns.value = props.btns.filter((item) => !item.collapse);
     collspaceBtns.value = props.btns.filter((item) => item.collapse === true);
-});
-
-const collspaceShow = computed(() => {
     if (collspaceBtns.value.length <= 0) {
-        return false;
+        collspaceShow.value = false;
+        return;
     }
-    return true;
+    collspaceBtns.value.forEach((item) => {
+        if (handleCheckColumnBtnIf(props.record, props.rowIndex, item)) {
+            collspaceShow.value = true;
+        }
+    });
+    return;
 });
 
 /** 操作列按钮点击事件 */
