@@ -89,7 +89,7 @@ const handleClickColumnBtn = (item: Record<string, any>, index: number, btn: Bas
     flex-direction: column;
     padding: 0 4px;
     :deep(.arco-link) {
-        padding: 6px 10px;
+        padding: 4px 10px;
     }
 }
 </style>
