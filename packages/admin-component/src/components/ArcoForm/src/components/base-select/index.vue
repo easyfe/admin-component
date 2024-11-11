@@ -1,15 +1,18 @@
 <template>
     <form-item>
-        <a-select v-model="model" v-bind="$attrs"> </a-select>
+        <a-select v-model="model" v-bind="$attrs" :options="privateOptions"> </a-select>
     </form-item>
 </template>
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, useAttrs } from "vue";
 import FormItem from "../form-item/index.vue";
+import { typeHelper } from "@ap/utils/typeHelper";
 
 defineOptions({
     name: "Select"
 });
+
+const attrs: any = useAttrs();
 
 const props = withDefaults(
     defineProps<{
@@ -30,6 +33,16 @@ const model = computed({
     set: (newVal) => {
         emits("update:modelValue", newVal);
     }
+});
+
+const privateOptions = computed(() => {
+    if (!attrs.options) {
+        return [];
+    }
+    if (typeHelper.isFunction(attrs.options)) {
+        return attrs.options();
+    }
+    return attrs.options;
 });
 </script>
 <style lang="less" scoped></style>

@@ -1,6 +1,8 @@
 <template>
     <arco-modal :visible="computedVisible" :config="props.modalConfig" :ok="handleOk" @cancel="handleCancel">
         <div class="base-modal-content">
+            <!-- 当value不是响应式的时候，可以用来处理一些表单响应式更新问题 -->
+            <div style="display: none">{{ privateFormData }}</div>
             <arco-form
                 ref="modalForm"
                 v-model="privateFormData"

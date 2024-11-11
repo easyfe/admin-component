@@ -2,6 +2,9 @@
     <form-item>
         <a-input v-model="model" v-bind="$attrs" readonly>
             <template #append>
+                <div class="my-append" @click="appendClear">
+                    <icon-close-circle />
+                </div>
                 <div class="my-append" @click="appendClick">
                     <icon-settings />
                 </div>
@@ -43,6 +46,10 @@ const model = computed({
 
 function appendClick() {
     attrs?.modalClick?.();
+}
+
+function appendClear() {
+    model.value = "";
 }
 </script>
 <style lang="less" scoped>

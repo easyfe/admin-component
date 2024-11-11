@@ -81,10 +81,11 @@ const formHelper = {
      * @param value
      * @returns
      */
-    section(value: string) {
+    section(value: string, extra?: BaseFormInput) {
         return {
             inputType: "section",
-            value
+            value,
+            ...extra
         };
     },
     /**
@@ -245,7 +246,12 @@ const formHelper = {
      * @param extra
      * @returns
      */
-    select(label: string, field: string, options: BaseFormSelectOptions[], extra?: BaseFormSelect) {
+    select(
+        label: string,
+        field: string,
+        options: BaseFormSelectOptions[] | (() => BaseFormSelectOptions[]),
+        extra?: BaseFormSelect
+    ) {
         extra = {
             ...extra,
             placeholder: extra?.placeholder ?? getI18nValue("请选择"),

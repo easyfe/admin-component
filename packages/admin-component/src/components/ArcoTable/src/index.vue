@@ -168,6 +168,10 @@
                                                     : "-"
                                             }}
                                         </template>
+                                        <!-- 自定义列 -->
+                                        <template v-if="item.type === 'custom'">
+                                            {{ item.callback?.(record, rowIndex) }}
+                                        </template>
                                         <!-- 时间列 -->
                                         <template v-if="item.type === 'date'">
                                             <template
@@ -206,7 +210,7 @@
                                             <column-btns
                                                 :btns="item.btns"
                                                 :record="record"
-                                                :rowIndex="rowIndex"
+                                                :row-index="rowIndex"
                                             ></column-btns>
                                         </template>
                                     </template>

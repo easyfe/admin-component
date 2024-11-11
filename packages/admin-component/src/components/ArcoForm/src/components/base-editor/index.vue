@@ -1,7 +1,7 @@
 <template>
     <form-item>
-        <TinyEditor v-if="isDark" v-model="model" class="editor" :init="initEditor" />
-        <TinyEditor v-else v-model="model" class="editor" :init="initEditor" />
+        <TinyEditor v-if="isDark" v-model="model" class="editor" v-bind="editorProps" :init="initEditor" />
+        <TinyEditor v-else v-model="model" class="editor" v-bind="editorProps" :init="initEditor" />
         <a-upload style="display: none" v-bind="uploadProps" @success="onSuccess">
             <template #upload-button>
                 <a-button ref="myUpload"></a-button>
@@ -33,13 +33,17 @@ const props = withDefaults(
         theme?: "dark" | "light";
         language?: string;
         uploadProps?: any;
+        editorProps?: any;
+        height?: number;
     }>(),
     {
         modelValue: () => "",
         placeholder: () => "",
         theme: () => "light",
         language: () => "zh-Hans",
-        uploadProps: () => ({})
+        uploadProps: () => ({}),
+        editorProps: () => ({}),
+        height: 500
     }
 );
 const emits = defineEmits<{
@@ -65,19 +69,23 @@ const isDark = computed(() => {
 
 const initEditor = computed(() => {
     const baseUrl = `//iots-cdnaccelerate.lshenergy.com/static/tinymce/6.7.2`;
+    let toolbar: boolean | string[] = [
+        "undo redo bold italic underline forecolor backcolor lineheight alignleft aligncenter alignright bullist numlist fontsize customImage"
+    ];
+    if (props.editorProps?.toolbar === false) {
+        toolbar = false;
+    }
     return {
         language_url: `${baseUrl}/langs/${props.language}.js`,
         skin_url: `${baseUrl}/skins/ui/oxide${isDark.value ? "-dark" : ""}`,
         content_css: `${baseUrl}/skins/content/${isDark.value ? "dark" : "default"}/content.min.css`,
         language: props.language, // 语言类型
         placeholder: props.placeholder, // textarea中的提示信息
-        height: 500, // 高度
+        height: props.height, // 高度
         menubar: false,
         branding: false,
         plugins: "image advlist lists",
-        toolbar: [
-            "undo redo bold italic underline forecolor backcolor lineheight alignleft aligncenter alignright bullist numlist fontsize customImage"
-        ],
+        toolbar,
         content_style: "body {font-size: 14px;}",
         font_size_formats: "8px 10px 12px 14px 16px 18px 24px 36px 48px",
         setup: (editor: any): any => {

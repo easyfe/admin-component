@@ -9,7 +9,7 @@
     "eslint.run": "onSave",
     "eslint.validate": ["javascript", "javascriptreact", "vue", "typescript", "typescriptreact"],
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": "explicit"
     },
     "vetur.format.defaultFormatter.html": "js-beautify-html",
     "vetur.format.defaultFormatter.js": "vscode-typescript",

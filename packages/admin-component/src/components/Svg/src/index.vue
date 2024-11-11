@@ -23,28 +23,28 @@ const getRealPx = (value: number | string): string => {
     return `${value}px`;
 };
 
-const props = defineProps({
-    /** 名称，链接 */
-    name: {
-        type: String,
-        default: ""
-    },
-    /** 宽度 */
-    width: {
-        type: [Number, String],
-        default: ""
-    },
-    /** 高度 */
-    height: {
-        type: [Number, String],
-        default: ""
-    },
-    /** 颜色 */
-    color: {
-        type: String,
-        default: ""
+const props = withDefaults(
+    defineProps<{
+        // 名称，链接
+        name: string;
+        // 类型
+        type?: "svg" | "img";
+        // 宽度
+        width: number | string;
+        // 高度
+        height: number | string;
+        // 颜色
+        color?: string;
+    }>(),
+    {
+        name: "",
+        type: "svg",
+        width: "",
+        height: "",
+        color: ""
     }
-});
+);
+
 /** 拼接svg名称 */
 const iconName = computed(() => {
     return `#svg-${props.name}`;
@@ -73,6 +73,9 @@ const svgfilter = computed(() => {
     return cssFilter;
 });
 const isHttp = computed(() => {
+    if (props.type === "img") {
+        return true;
+    }
     return /^http(s)?:\/\/.*$/.test(props.name);
 });
 /** 设置url格式引入svg的样式 */

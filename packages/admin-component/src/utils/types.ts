@@ -1,6 +1,6 @@
 import type {
+    Select,
     CheckboxOption,
-    SelectProps,
     SelectOption,
     FieldRule,
     Input,
@@ -24,6 +24,7 @@ import type {
     InputSearch,
     InputPassword
 } from "@arco-design/web-vue";
+import Editor from "@tinymce/tinymce-vue";
 /** form表单元素基础配置 */
 export type BaseFormExtra = {
     rules?: FieldRule | FieldRule[];
@@ -80,7 +81,7 @@ export type BaseFormCheckboxGroup = Partial<CheckboxGroupProps> &
     BaseFormExtra & { labelKey?: string; valueKey?: string };
 export type BaseFormCheckbox = Partial<CheckboxProps>;
 //下拉框
-export type BaseFormSelect = BaseFormExtra & Partial<SelectProps>;
+export type BaseFormSelect = BaseFormExtra & InstanceType<typeof Select>["$props"];
 export type BaseFormSelectOptions = Partial<SelectOption>;
 //级联选择器
 export type BaseFormCascader = BaseFormExtra & InstanceType<typeof Cascader>["$props"];
@@ -112,9 +113,11 @@ export type BaseTreeSelect = BaseFormExtra & InstanceType<typeof TreeSelect>["$p
 //富文本编辑器
 export type BaseEditor = BaseFormExtra & {
     theme?: "dark" | "light";
+    height?: number;
     uploadProps?: InstanceType<typeof Upload>["$props"] & {
         maxSize?: number; //最大上传大小,单位KB
     };
+    editorProps?: InstanceType<typeof Editor>["$props"];
 };
 
 //=====================以下为table相关=====================
@@ -125,8 +128,20 @@ import { VNode } from "vue";
 
 export type _TableColumn = {
     /** 类型，默认default */
-    type?: "default" | "slot" | "btns" | "image" | "time" | "dictionary" | "date" | "status" | "link" | "html";
-
+    type?:
+        | "default"
+        | "slot"
+        | "btns"
+        | "image"
+        | "time"
+        | "dictionary"
+        | "date"
+        | "status"
+        | "link"
+        | "html"
+        | "custom";
+    /** 自定义回调 */
+    callback?: (row: Record<string, any>, index: number) => any;
     /** prop */
     prop: string;
     /** 标签 */

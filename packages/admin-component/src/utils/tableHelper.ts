@@ -72,6 +72,25 @@ const tableHelper = {
         };
     },
     /**
+     * 默认列
+     * @param label
+     * @param prop
+     * @param extra
+     * @returns
+     */
+    custom(
+        label: string,
+        callback: (row: Record<string, any>, index: number) => any,
+        extra?: BaseTableColunmExtra
+    ): any {
+        return {
+            type: "custom",
+            callback,
+            label,
+            ...extra
+        };
+    },
+    /**
      * 字典列
      * @param label
      * @param prop
