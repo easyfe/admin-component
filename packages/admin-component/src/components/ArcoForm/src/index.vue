@@ -9,9 +9,10 @@
                         <component
                             :is="componentList[item.inputType]"
                             v-else
-                            v-model="model[item.field]"
+                            :model-value="getNestedFieldValue(item.field)"
                             :layout="props.layout"
                             v-bind="item"
+                            @update:modelValue="setNestedFieldValue(item.field, $event)"
                         ></component>
                     </a-col>
                 </template>
@@ -54,6 +55,24 @@ const model = computed({
         emits("update:modelValue", newVal);
     }
 });
+
+const getNestedFieldValue = (field: string) => {
+    const fields = field.split(".");
+    let temp = model.value;
+    for (let i = 0; i < fields.length; i++) {
+        temp = temp[fields[i]];
+    }
+    return temp;
+};
+
+const setNestedFieldValue = (field: string, event: any) => {
+    const fields = field.split(".");
+    let temp = model.value;
+    for (let i = 0; i < fields.length - 1; i++) {
+        temp = temp[fields[i]];
+    }
+    temp[fields[fields.length - 1]] = event;
+};
 
 //获取宽度
 const getSpan = computed(() => (item: any): any => {
