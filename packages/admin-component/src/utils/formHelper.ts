@@ -28,7 +28,7 @@ import {
     BaseEditor,
     BaseModalSelect
 } from "./types";
-import { nextTick } from "vue";
+import { nextTick, VNode } from "vue";
 import { getI18nValue } from "./util";
 
 function genrateDateForm(label: string, field: string, dateType: DateType, extra?: Record<string, any>) {
@@ -423,6 +423,17 @@ const formHelper = {
             label,
             field,
             ...extra
+        };
+    },
+    /**
+     * 自定义渲染
+     * @param content
+     * @returns
+     */
+    render(content: (data: any) => VNode) {
+        return {
+            inputType: "render",
+            content
         };
     }
 };

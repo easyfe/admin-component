@@ -6,6 +6,7 @@
                     <a-col v-if="handleCheckIf(item.if)" class="form-items" :span="getSpan(item)">
                         <div v-if="item.inputType === 'section'" class="section">{{ item.value }}</div>
                         <slot v-else-if="item.inputType === 'slot'" :name="item.field"></slot>
+                        <component :is="item.content?.(model)" v-else-if="item.inputType === 'render'" />
                         <component
                             :is="componentList[item.inputType]"
                             v-else

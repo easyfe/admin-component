@@ -224,6 +224,7 @@
                         :class="[tableConfig.allowFlatten && flattenType === 'app' ? 'app-list' : '']"
                         :style="getAppListStyle"
                     >
+                        <a-empty v-if="!privateList.length"></a-empty>
                         <template v-for="(item, index) in privateList">
                             <slot name="slot_item" :row="item" :index="index"> </slot>
                         </template>
@@ -283,7 +284,6 @@
 
 <script lang="ts" setup>
 import { _Btn, _TableColumn, _TableConfig, _TableReq } from "@ap/utils/types";
-import { BaseTableColunmBtn } from "@ap/utils/tableHelper";
 import { handleCheckBtnIf, handleCheckBtnDidsable, arrIncludes } from "./util";
 import { dateHelper } from "@ap/utils/dateHelper";
 import { cloneDeep, debounce, merge } from "lodash-es";
@@ -484,7 +484,7 @@ watch(
         if (loading.value) {
             return;
         }
-        listMore(true);
+        listMore("init");
     },
     {
         deep: true
@@ -539,8 +539,9 @@ const privateFilterData = computed({
         emits("update:filterData", e);
     }
 });
+type ListType = "init" | "refresh" | "";
 //加载逻辑判断
-const listMore = async (refresh = false): Promise<void> => {
+const listMore = async (listType: ListType): Promise<void> => {
     if (!props.req && !props.list) {
         loading.value = false;
         finished.value = true;
@@ -557,8 +558,10 @@ const listMore = async (refresh = false): Promise<void> => {
         );
         return;
     }
-    if (refresh) {
-        privatePage.value = 1;
+    if (listType) {
+        if (listType === "init") {
+            privatePage.value = 1;
+        }
         finished.value = false;
     }
     if (!props.req) {
@@ -582,7 +585,7 @@ const listMore = async (refresh = false): Promise<void> => {
             total.value = Number.isNaN(totalValue) ? 0 : totalValue;
         }
         loading.value = false;
-        if (refresh) {
+        if (listType === "init") {
             privateList.value = [];
             emits("update:list", []);
         }
@@ -606,6 +609,9 @@ const listMore = async (refresh = false): Promise<void> => {
         if (_data.length < privateSize.value) {
             finished.value = true;
         }
+        if (listType === "") {
+            baseTable.value.$el?.querySelector?.(".arco-table-body")?.scrollTo(0, 0);
+        }
     } catch (e) {
         const str = String(e);
         if (str.indexOf("当前请求已取消") !== -1 || str.indexOf("请求过快，已拦截") !== -1) {
@@ -618,19 +624,17 @@ const listMore = async (refresh = false): Promise<void> => {
         error.value = true;
     }
 };
+
 /** 加载条数切换 */
 const handleSizeChange = (size: number): void => {
     privateSize.value = size;
-    listMore();
+    listMore("");
 };
+
 /** 当前页切换 */
 const handleCurrentChange = (page: number): void => {
     privatePage.value = page;
-    listMore();
-};
-/** 操作列按钮点击事件 */
-const handleClickColumnBtn = (item: Record<string, any>, index: number, btn: BaseTableColunmBtn): void => {
-    btn.handler?.(item, index);
+    listMore("");
 };
 
 /** 扩展按钮事件，右上角，左下角 */
@@ -707,9 +711,9 @@ function onSelectionChange(v: (string | number)[]) {
 }
 
 /**暴露主动刷新事件 */
-const refresh = (): void => {
+const refresh = (listType?: ListType): void => {
     selectedKeys.value = [];
-    listMore(true);
+    listMore(listType ?? "refresh");
 };
 //获取列配置
 function getColumnConfig(item: _TableColumn) {
@@ -769,7 +773,7 @@ onMounted(() => {
         privateList.value = props.list;
     }
     selectedKeys.value = [];
-    listMore(true);
+    listMore("init");
 });
 onBeforeUnmount(() => {
     window.onresize = null;

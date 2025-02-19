@@ -72,7 +72,7 @@ const tableHelper = {
         };
     },
     /**
-     * 默认列
+     * 自定义列
      * @param label
      * @param prop
      * @param extra
