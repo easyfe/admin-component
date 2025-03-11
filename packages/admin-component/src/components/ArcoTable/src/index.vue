@@ -160,13 +160,16 @@
                                     <template #cell="{ record, rowIndex }">
                                         <!-- 普通列 -->
                                         <template v-if="item.type === 'default'">
-                                            {{
-                                                record[item.prop]
-                                                    ? `${item.leftExtra || ""}${record[item.prop]}${
-                                                          item.rightExtra || ""
-                                                      }`
-                                                    : "-"
-                                            }}
+                                            <template
+                                                v-if="record[item.prop] !== undefined && record[item.prop] !== null"
+                                            >
+                                                {{
+                                                    `${item.leftExtra || ""}${record[item.prop]}${
+                                                        item.rightExtra || ""
+                                                    }`
+                                                }}
+                                            </template>
+                                            <template v-else> -</template>
                                         </template>
                                         <!-- 自定义列 -->
                                         <template v-if="item.type === 'custom'">
@@ -729,8 +732,8 @@ function getColumnConfig(item: _TableColumn) {
             ...config,
             tooltip: item.tooltip || { position: "top" },
             showOverflowTooltip: true,
-            ...item,
-            dataIndex: item.prop
+            dataIndex: item.prop,
+            ...item
         };
     }
     return config;
