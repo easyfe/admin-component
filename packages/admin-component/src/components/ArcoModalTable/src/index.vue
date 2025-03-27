@@ -4,7 +4,6 @@
             <arco-table
                 ref="baseModalTable"
                 v-model:filter-data="privateFilterData"
-                :default-selection-keys="selectionKeys"
                 v-bind="privateTableConfig"
                 @selection-change="onSelectionChange"
                 @export="onExport"
@@ -32,7 +31,6 @@ const props = withDefaults(
         visible: boolean;
         modalConfig?: InstanceType<typeof Modal>["$props"];
         tableConfig?: InstanceType<typeof ArcoTable>["$props"];
-        defaultSelected?: any[];
         //以下用于函数式调用
         export?: (data: Record<string, any>) => void;
         destroy?: () => void;
@@ -43,7 +41,6 @@ const props = withDefaults(
         visible: () => false,
         modalConfig: () => <any>{},
         tableConfig: undefined,
-        defaultSelected: () => [],
         destroy: undefined,
         ok: undefined,
         filterChange: undefined,
@@ -56,8 +53,6 @@ const baseModalTable = ref();
 const fnVisible = ref(true);
 
 const selectList = ref<any[]>([]);
-
-const selectionKeys = ref<string[] | number[]>([]);
 
 const privateFilterData = ref<any>({});
 
@@ -104,13 +99,6 @@ watch(
     (newVal) => {
         if (newVal) {
             baseModalTable.value?.refresh();
-            selectionKeys.value = props.defaultSelected?.map((item: any) => {
-                if (typeof item === "object") {
-                    return item[props.tableConfig?.tableConfig.arcoProps?.rowKey || "id"];
-                } else {
-                    return item;
-                }
-            });
         }
     },
     {

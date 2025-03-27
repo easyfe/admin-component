@@ -145,7 +145,7 @@
                 <template v-if="!tableConfig.allowFlatten || flattenType === 'list'">
                     <a-table
                         ref="baseTable"
-                        v-model:selectedKeys="selectedKeys"
+                        v-model:selectedKeys="currentPageSelectedKeys"
                         :data="privateList"
                         :pagination="false"
                         :stripe="true"
@@ -239,17 +239,16 @@
         <div v-if="enableFooter" class="footer">
             <div class="bat-wrapper">
                 <template v-if="enableSelection">
-                    <a-checkbox
-                        v-model="footerCheckAllFlag"
-                        class="bat-checkbox"
-                        :indeterminate="footerIndeterminateFlag"
-                        @change="haneleClickChoose"
-                    >
-                        {{ footerCheckAllFlag ? "取消全选" : "全选" }}
-                    </a-checkbox>
                     <span class="bats-slot">
-                        已选 {{ selectedKeys?.length
-                        }}<template v-if="tableConfig.selectLimit">/ {{ tableConfig.selectLimit }}</template> 个
+                        已选
+                        <span class="selected-count" @click="showSelectedDialog"
+                            >{{ allSelectedKeys.length
+                            }}<template v-if="tableConfig.selectLimit">/ {{ tableConfig.selectLimit }}</template>
+                            个</span
+                        >
+                        <a-button v-if="allSelectedKeys.length > 0" type="text" status="danger" @click="clearSelection"
+                            >清空</a-button
+                        >
                     </span>
                 </template>
                 <template v-if="batsShow">
@@ -282,12 +281,23 @@
                 @change="handleCurrentChange"
             ></a-pagination>
         </div>
+
+        <!-- 使用抽离的已选项目弹窗组件 -->
+        <selected-dialog
+            v-model:visible="selectedDialogVisible"
+            :columns="privateTableConfig?.columns || []"
+            :selected-data="allSelectedData"
+            :table-row-key="tableRowKey"
+            :dictionary-obj="dictionaryObj"
+            @remove="removeSelectedItem"
+            @clear="clearSelection"
+        />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { _Btn, _TableColumn, _TableConfig, _TableReq } from "@ap/utils/types";
-import { handleCheckBtnIf, handleCheckBtnDidsable, arrIncludes } from "./util";
+import { handleCheckBtnIf, handleCheckBtnDidsable } from "./util";
 import { dateHelper } from "@ap/utils/dateHelper";
 import { cloneDeep, debounce, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
@@ -295,6 +305,7 @@ import { IconRefresh } from "@arco-design/web-vue/es/icon";
 import { RichText } from "@ap/components/RichText";
 import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount } from "vue";
 import ColumnBtns from "./components/column-btns/index.vue";
+import SelectedDialog from "./components/selected-dialog/index.vue";
 
 defineOptions({
     name: "AroTable"
@@ -308,6 +319,8 @@ const props = withDefaults(
         filterData?: { tabsData?: string | number } & Record<string, any>;
         //复选框默认选中key集合
         defaultSelectionKeys?: number[] | string[];
+        //复选框默认选中数据集合
+        defaultSelectionData?: any[];
         //构造请求
         req?: _TableReq;
         //表格配置
@@ -319,6 +332,7 @@ const props = withDefaults(
         filterConfig: undefined,
         filterData: () => ({}),
         defaultSelectionKeys: () => [],
+        defaultSelectionData: () => [],
         req: undefined,
         list: () => []
     }
@@ -395,10 +409,6 @@ const total = ref(0);
 const privatePage = ref(1);
 //分页条数
 const privateSize = ref(20);
-/** 全选标记 */
-const footerCheckAllFlag = ref(false);
-/** 底部多选复选框不确定状态 */
-const footerIndeterminateFlag = ref(false);
 //表格高度
 const tableHeight = ref("");
 //表格实例
@@ -478,7 +488,13 @@ const tableRowKey = computed(() => {
     return privateTableConfig.value?.arcoProps?.rowKey || "id";
 });
 //选中的keys
-const selectedKeys = ref<string[] | number[]>([]);
+const selectedKeys = ref<(string | number)[]>([]);
+//当前页选中的keys
+const currentPageSelectedKeys = ref<(string | number)[]>([]);
+//所有页面选中的keys (用于跨页选择)
+const allSelectedKeys = ref<(string | number)[]>([]);
+//所有页面选中的完整数据
+const allSelectedData = ref<any[]>([]);
 
 /** 请求参数修改 */
 watch(
@@ -492,6 +508,32 @@ watch(
     {
         deep: true
     }
+);
+
+// 监听当前页选中keys的变化，同步到全局选中集合
+watch(currentPageSelectedKeys, (newVal) => {
+    // 先从allSelectedKeys中移除当前页所有可选项
+    const currentPageKeys = privateList.value.filter((item) => !item.disabled).map((item) => item[tableRowKey.value]);
+
+    allSelectedKeys.value = allSelectedKeys.value.filter((key) => !currentPageKeys.includes(key));
+
+    // 然后添加当前页新选中的项 - 这里需要去重
+    allSelectedKeys.value = Array.from(new Set([...allSelectedKeys.value, ...newVal]));
+
+    // 更新selectedKeys以保持向后兼容
+    selectedKeys.value = [...allSelectedKeys.value];
+});
+
+// 当加载新页面时，同步当前页面的选中状态
+watch(
+    privateList,
+    () => {
+        // 设置当前页选中的keys
+        currentPageSelectedKeys.value = privateList.value
+            .filter((item) => allSelectedKeys.value.includes(item[tableRowKey.value]))
+            .map((item) => item[tableRowKey.value]);
+    },
+    { deep: true }
 );
 
 /** 如果做了双向绑定，则更新双向绑定的数据到实际list中 */
@@ -512,23 +554,45 @@ watch(loading, (newVal) => {
     if (!newVal) {
         setTableHeight();
         if (props.defaultSelectionKeys.length) {
-            selectedKeys.value = Array.from(new Set([...(selectedKeys.value as any[]), ...props.defaultSelectionKeys]));
+            allSelectedKeys.value = Array.from(
+                new Set([...allSelectedKeys.value, ...(props.defaultSelectionKeys as (string | number)[])])
+            );
+            selectedKeys.value = [...allSelectedKeys.value];
+        }
+        if (props.defaultSelectionData.length) {
+            allSelectedData.value = Array.from(
+                new Set([...allSelectedData.value, ...(props.defaultSelectionData as any[])])
+            );
+            allSelectedKeys.value = Array.from(
+                new Set([
+                    ...allSelectedKeys.value,
+                    ...(props.defaultSelectionData as any[]).map((item) => item[tableRowKey.value])
+                ])
+            );
+            selectedKeys.value = [...allSelectedKeys.value];
         }
         checkSelectedDisabled();
     }
 });
+
 /** 判断是否需要禁用选中行 */
 const checkSelectedDisabled = (): void => {
     if (props.tableConfig.disableSelectedRow) {
         privateList.value.forEach((item) => {
-            item.disabled = (props.defaultSelectionKeys as any[]).includes(item[tableRowKey.value]);
+            item.disabled = allSelectedKeys.value.includes(item[tableRowKey.value]);
         });
     }
 };
-/** 切换全选状态 */
-const haneleClickChoose = (value: boolean | (string | number | boolean)[]): void => {
-    baseTable.value.selectAll(value);
+
+// 清空所有选中项
+const clearSelection = (): void => {
+    allSelectedKeys.value = [];
+    selectedKeys.value = [];
+    currentPageSelectedKeys.value = [];
+    allSelectedData.value = [];
+    emits("selectionChange", []);
 };
+
 /** 获取key */
 const vnodeKey = computed(() => {
     return getCurrentInstance()?.vnode.key;
@@ -613,7 +677,7 @@ const listMore = async (listType: ListType): Promise<void> => {
             finished.value = true;
         }
         if (listType === "") {
-            baseTable.value.$el?.querySelector?.(".arco-table-body")?.scrollTo(0, 0);
+            baseTable.value?.$el?.querySelector?.(".arco-table-body")?.scrollTo(0, 0);
         }
     } catch (e) {
         const str = String(e);
@@ -645,7 +709,10 @@ const handleExtraButtonClick = (btn: _Btn): void => {
     btn.handler?.(btn);
 };
 
-/** 动态设置table的高度 */
+// 声明 ResizeObserver 变量
+const tableResizeObserver = ref<ResizeObserver | null>(null);
+
+/** 动态设置表格高度 */
 const setTableHeight = (): void => {
     nextTick(() => {
         if (!baseTableWrapper.value) {
@@ -655,30 +722,50 @@ const setTableHeight = (): void => {
         if (!maxHeight) {
             return;
         }
+
         if (maxHeight === "auto") {
-            const table = baseTableWrapper.value;
-            const footerHeight = enableFooter.value ? 65 : 0;
-            const parentNode = document.getElementsByClassName("frame-view-content")?.[0];
-            let paddingBottom = 0;
-            let marginBottom = 0;
-            if (parentNode) {
-                const paddingBottomStr = window.getComputedStyle(parentNode, null).getPropertyValue("padding-bottom");
-                const marginBottomStr = window.getComputedStyle(parentNode, null).getPropertyValue("margin-bottom");
-                if (paddingBottomStr) {
-                    paddingBottom = parseFloat(paddingBottomStr.replace("px", ""));
+            // 创建一个新的用于观察高度变化的方法
+            const updateHeight = () => {
+                const table = baseTableWrapper.value;
+                const footerHeight = enableFooter.value ? 65 : 0;
+                const parentNode = document.getElementsByClassName("frame-view-content")?.[0];
+                let paddingBottom = 0;
+                let marginBottom = 0;
+
+                if (parentNode) {
+                    const paddingBottomStr = window
+                        .getComputedStyle(parentNode, null)
+                        .getPropertyValue("padding-bottom");
+                    const marginBottomStr = window.getComputedStyle(parentNode, null).getPropertyValue("margin-bottom");
+
+                    if (paddingBottomStr) {
+                        paddingBottom = parseFloat(paddingBottomStr.replace("px", ""));
+                    }
+                    if (marginBottomStr) {
+                        marginBottom = parseFloat(marginBottomStr.replace("px", ""));
+                    }
                 }
-                if (marginBottomStr) {
-                    marginBottom = parseFloat(marginBottomStr.replace("px", ""));
+
+                // 计算表格容器到视口顶部的距离
+                const rect = table.getBoundingClientRect();
+                tableHeight.value =
+                    window.innerHeight - rect.top - footerHeight - paddingBottom - marginBottom - 2 + "px";
+            };
+
+            // 初次计算高度
+            updateHeight();
+
+            // 注册 ResizeObserver 监听元素大小变化
+            if (!tableResizeObserver.value) {
+                tableResizeObserver.value = new ResizeObserver(updateHeight);
+                tableResizeObserver.value.observe(baseTableWrapper.value);
+
+                // 同时监听父元素变化
+                const parentNode = document.getElementsByClassName("frame-view-content")?.[0];
+                if (parentNode) {
+                    tableResizeObserver.value.observe(parentNode);
                 }
             }
-            tableHeight.value =
-                window.innerHeight -
-                table.getBoundingClientRect().top -
-                footerHeight -
-                paddingBottom -
-                marginBottom -
-                2 +
-                "px";
         } else if (typeof maxHeight === "number") {
             tableHeight.value = maxHeight + "px";
         } else if (typeof maxHeight === "string") {
@@ -697,27 +784,38 @@ const setDictionaryValue = (prop: string, value: string | number): string | numb
     return dictionaryObj.value[prop][value];
 };
 
-function onSelectionChange(v: (string | number)[]) {
-    const selectionData = privateList.value.filter((item) => v.includes(item[tableRowKey.value]));
-    emits("selectionChange", selectionData);
-    checkSelectedDisabled();
-    nextTick(() => {
-        const includeLength = arrIncludes(
-            selectedKeys.value,
-            privateList.value.map((item) => item[tableRowKey.value])
-        );
-        footerCheckAllFlag.value = includeLength > 0 && includeLength === privateList.value.length;
-        //计算部分选中状态的时候，需要过滤已禁用的数据
-        footerIndeterminateFlag.value =
-            includeLength - props.defaultSelectionKeys.length > 0 && includeLength < privateList.value.length;
-    });
+function onSelectionChange(selectedRowKeys: (string | number)[]) {
+    // 获取当前页选中的数据
+    const currentPageSelectionData = privateList.value.filter((item) =>
+        selectedRowKeys.includes(item[tableRowKey.value])
+    );
+
+    // 处理当前页数据，从全局中移除当前页所有可选项对应的数据
+    const currentPageKeys = privateList.value.filter((item) => !item.disabled).map((item) => item[tableRowKey.value]);
+    allSelectedData.value = allSelectedData.value.filter((item) => !currentPageKeys.includes(item[tableRowKey.value]));
+
+    // 添加当前页新选中的数据到全局数据集合
+    allSelectedData.value = [...allSelectedData.value, ...currentPageSelectionData];
+
+    // 发送所有页面选中的完整数据
+    emits("selectionChange", allSelectedData.value);
 }
 
 /**暴露主动刷新事件 */
 const refresh = (listType?: ListType): void => {
-    selectedKeys.value = [];
+    // 重置当前页选中状态，但保留所有选中项
+    currentPageSelectedKeys.value = [];
     listMore(listType ?? "refresh");
 };
+
+// 重置所有选择
+const resetSelection = (): void => {
+    allSelectedKeys.value = [];
+    selectedKeys.value = [];
+    currentPageSelectedKeys.value = [];
+    allSelectedData.value = [];
+};
+
 //获取列配置
 function getColumnConfig(item: _TableColumn) {
     let config: Record<string, any> = {
@@ -757,9 +855,45 @@ function onRefresh() {
     }
 }
 
+// 弹窗可见性控制
+const selectedDialogVisible = ref(false);
+
+// 显示已选项目弹窗
+const showSelectedDialog = () => {
+    if (allSelectedKeys.value.length > 0) {
+        selectedDialogVisible.value = true;
+    }
+};
+
+// 删除单个选中项目
+const removeSelectedItem = (item: any) => {
+    const key = item[tableRowKey.value];
+
+    // 从已选keys和数据中移除
+    allSelectedKeys.value = allSelectedKeys.value.filter((k) => k !== key);
+    allSelectedData.value = allSelectedData.value.filter((d) => d[tableRowKey.value] !== key);
+
+    // 如果当前页包含此项，从当前页选中集合中也移除
+    currentPageSelectedKeys.value = currentPageSelectedKeys.value.filter((k) => k !== key);
+
+    // 同步到selectedKeys以保持向后兼容
+    selectedKeys.value = [...allSelectedKeys.value];
+
+    // 通知外部选择变化
+    emits("selectionChange", allSelectedData.value);
+
+    // 如果选中项全部清空，关闭弹窗
+    if (allSelectedKeys.value.length === 0) {
+        selectedDialogVisible.value = false;
+    }
+};
+
 defineExpose({
     refresh,
-    baseTable
+    baseTable,
+    resetSelection,
+    selectedKeys: allSelectedKeys,
+    selectedData: allSelectedData
 });
 
 onMounted(() => {
@@ -767,7 +901,7 @@ onMounted(() => {
         privateSize.value = privateTableConfig.value.size;
     }
     setTableHeight();
-    window.onresize = debounce(setTableHeight, 300);
+
     if (props.list?.length && props.req) {
         console.warn("存在req请求时候，将过滤双向绑定的初始值，请在请求后进行处理");
     }
@@ -775,11 +909,18 @@ onMounted(() => {
         console.warn("不存在req请求，将直接进行双向绑定的初始值");
         privateList.value = props.list;
     }
+    allSelectedKeys.value = [];
     selectedKeys.value = [];
+    currentPageSelectedKeys.value = [];
+    allSelectedData.value = [];
     listMore("init");
 });
 onBeforeUnmount(() => {
-    window.onresize = null;
+    // 清理 ResizeObserver
+    if (tableResizeObserver.value) {
+        tableResizeObserver.value.disconnect();
+        tableResizeObserver.value = null;
+    }
 });
 </script>
 <style lang="scss" scoped>
@@ -853,6 +994,13 @@ onBeforeUnmount(() => {
             .bats-slot {
                 margin-right: 10px;
                 color: var(--color-text-2);
+                .selected-count {
+                    color: rgb(var(--primary-6));
+                    cursor: pointer;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
             }
         }
     }

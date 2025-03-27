@@ -7,7 +7,6 @@ import { modalShow } from "../../utils/util";
 type Options = {
     modalConfig?: InstanceType<typeof Modal>["$props"];
     tableConfig?: InstanceType<typeof ArcoTable>["$props"];
-    defaultSelected?: any[];
     ok?: (data: any[]) => Promise<void> | void;
     filterChange?: (data: Record<string, any>) => void;
     export?: (data: Record<string, any>) => void;
