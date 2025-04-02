@@ -317,8 +317,6 @@ const props = withDefaults(
         filterConfig?: any[];
         //筛选框值
         filterData?: { tabsData?: string | number } & Record<string, any>;
-        //复选框默认选中key集合
-        defaultSelectionKeys?: number[] | string[];
         //复选框默认选中数据集合
         defaultSelectionData?: any[];
         //构造请求
@@ -331,7 +329,6 @@ const props = withDefaults(
     {
         filterConfig: undefined,
         filterData: () => ({}),
-        defaultSelectionKeys: () => [],
         defaultSelectionData: () => [],
         req: undefined,
         list: () => []
@@ -553,12 +550,6 @@ watch(
 watch(loading, (newVal) => {
     if (!newVal) {
         setTableHeight();
-        if (props.defaultSelectionKeys.length) {
-            allSelectedKeys.value = Array.from(
-                new Set([...allSelectedKeys.value, ...(props.defaultSelectionKeys as (string | number)[])])
-            );
-            selectedKeys.value = [...allSelectedKeys.value];
-        }
         if (props.defaultSelectionData.length) {
             allSelectedData.value = Array.from(
                 new Set([...allSelectedData.value, ...(props.defaultSelectionData as any[])])
@@ -570,6 +561,7 @@ watch(loading, (newVal) => {
                 ])
             );
             selectedKeys.value = [...allSelectedKeys.value];
+            emits("selectionChange", allSelectedData.value);
         }
         checkSelectedDisabled();
     }
