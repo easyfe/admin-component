@@ -21,6 +21,7 @@ import type { Modal } from "@arco-design/web-vue";
 import { ArcoTable } from "@ap/components/ArcoTable";
 import { ArcoModal } from "@ap/components/ArcoModal";
 import { ref, computed, watch, watchEffect } from "vue";
+import { cloneDeep } from "lodash-es";
 
 defineOptions({
     name: "AroModalTable"
@@ -78,16 +79,19 @@ const privateTableConfig = computed<any>(() => {
             rowKey: "id"
         }
     };
-    if (props.tableConfig?.req?.params) {
-        // eslint-disable-next-line vue/no-mutating-props, vue/no-side-effects-in-computed-properties
-        props.tableConfig.req.params = { ...props.tableConfig.req.params, ...privateFilterData.value };
+
+    // 创建 tableConfig 的深拷贝
+    const tableConfigCopy = cloneDeep(props.tableConfig);
+
+    // 在克隆对象中更新参数
+    if (tableConfigCopy?.req?.params) {
+        tableConfigCopy.req.params = {
+            ...tableConfigCopy.req.params,
+            ...privateFilterData.value
+        };
     }
-    return { ...defaultConfig, ...props.tableConfig };
-    // const tableConfig = cloneDeep(props.tableConfig);
-    // if (tableConfig?.req) {
-    //     tableConfig.req.params = { ...tableConfig.req.params, ...privateFilterData.value };
-    // }
-    // return { ...defaultConfig, ...tableConfig };
+
+    return { ...defaultConfig, ...tableConfigCopy };
 });
 
 watchEffect(() => {
