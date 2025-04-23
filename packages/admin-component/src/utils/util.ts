@@ -21,6 +21,11 @@ export const modalShow = (ModalNode: any, opt: Record<string, any>) => {
     // 使用 render 函数将 vnode 渲染为真实DOM并挂载到 body 上
     render(vnode, container);
     document.body.appendChild(container);
+
+    // 返回实例，包含 destroy 方法
+    return {
+        destroy: handleDestroy
+    };
 };
 const { config } = useStore();
 
