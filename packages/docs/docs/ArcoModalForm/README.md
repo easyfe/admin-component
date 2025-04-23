@@ -27,6 +27,7 @@
 | visible **(v-model)** |                        是否可见                         |                    boolean                     |   -    |   `false`   |    是    |
 |         value         |                        表单数据                         |              Record<string, any>               |   -    |    `{}`     |    否    |
 |      modalConfig      | [弹窗配置](https://arco.design/vue/component/modal#API) |              Record<string, any>               |   -    |    `{}`     |    否    |
-|      formConfig       |                        表单配置                         |              Record<string, any>               |   -    |    `[]`     |    否    |
+|      formConfig       |                        表单配置                         |             Record<string, any>[]              |   -    |    `[]`     |    否    |
+|     arcoFormProps     | [弹窗配置](https://arco.design/vue/component/form#API)  |              Record<string, any>               |   -    |    `{}`     |    否    |
 |        change         |                      表单数据变化                       |     `(data: Record<string, any>) => void`      |   -    | `undefined` |    否    |
 |          ok           |                        表单确认                         | `(data: Record<string, any>) => Promise<void>` |   -    | `undefined` |    否    |
