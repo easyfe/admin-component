@@ -13,7 +13,7 @@
     "repository": "https://github.com/easyfe/admin-component",
     "scripts": {
         "start:lib": "vite build -w",
-        "build:lib": "rimraf dist es lib && vite build"
+        "build:lib": "rimraf dist es lib && vue-tsc --noEmit && vite build"
     },
     "dependencies": {
         "vue3-colorpicker": "^2.2.2",
