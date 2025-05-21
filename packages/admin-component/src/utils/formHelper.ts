@@ -1,5 +1,5 @@
 import { FormInstance } from "@arco-design/web-vue";
-import type { TreeNodeData } from "@arco-design/web-vue";
+import type { TreeNodeData, ValidatedError } from "@arco-design/web-vue";
 import {
     BaseFormCheckbox,
     BaseFormCheckboxGroup,
@@ -56,7 +56,7 @@ const formHelper = {
      */
     validate(value: FormInstance) {
         return new Promise((resolve, reject) => {
-            value.validate().then((res) => {
+            value.validate().then((res: Record<string, ValidatedError> | undefined) => {
                 if (!res) {
                     resolve(true);
                 } else {
