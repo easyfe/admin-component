@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "vue": "^3.2.23",
-        "@arco-design/web-vue": "latest",
+        "@arco-design/web-vue": "2.56.3",
         "@easyfe/admin-component": "workspace:*",
         "lodash-es": "latest",
         "@easyfe/web-request": "latest"
