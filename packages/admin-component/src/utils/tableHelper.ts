@@ -13,13 +13,13 @@ export type BaseTableColunmExtra = {
 } & TableColumnInstance["$props"];
 export type BaseTableColunmBtn = {
     /** 标签（按钮文字） */
-    label: string | ((row: Record<string, any>, index: number) => string);
+    label: string | ((row: any, index: number) => string);
     /** 点击事件 */
     handler?: (row: any, index: number) => void;
     /** 是否展示，仅false时隐藏 */
-    if?: boolean | ((row: Record<string, any>, index: number) => boolean);
+    if?: boolean | ((row: any, index: number) => boolean);
     /** 是否禁用，仅true时禁用 */
-    disabled?: boolean | ((row: Record<string, any>, index: number) => boolean);
+    disabled?: boolean | ((row: any, index: number) => boolean);
     /** 按钮颜色 */
     color?: string;
     /** 折叠 */
@@ -78,11 +78,7 @@ const tableHelper = {
      * @param extra
      * @returns
      */
-    custom(
-        label: string,
-        callback: (row: Record<string, any>, index: number) => any,
-        extra?: BaseTableColunmExtra
-    ): any {
+    custom(label: string, callback: (row: any, index: number) => any, extra?: BaseTableColunmExtra): any {
         return {
             type: "custom",
             callback,
@@ -154,7 +150,7 @@ const tableHelper = {
     status(
         label: string,
         prop: string,
-        handler: (item: Record<string, any>) => {
+        handler: (item: any) => {
             status: "normal" | "processing" | "success" | "warning" | "danger";
             text: string;
         },
@@ -176,7 +172,7 @@ const tableHelper = {
      * @param extra
      * @returns
      */
-    link(label: string, prop: string, handler: (item: Record<string, any>) => void, extra?: BaseTableColunmExtra): any {
+    link(label: string, prop: string, handler: (item: any) => void, extra?: BaseTableColunmExtra): any {
         return {
             type: "link",
             handler,

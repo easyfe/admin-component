@@ -2,7 +2,7 @@
     <form-item>
         <a-input v-model="model" v-bind="$attrs" readonly>
             <template #append>
-                <div class="my-append" @click="appendClear">
+                <div v-if="allowClear" class="my-append" @click="appendClear">
                     <icon-close-circle />
                 </div>
                 <div class="my-append" @click="appendClick">
@@ -25,9 +25,11 @@ defineOptions({
 const props = withDefaults(
     defineProps<{
         modelValue: string;
+        allowClear?: boolean;
     }>(),
     {
-        modelValue: ""
+        modelValue: "",
+        allowClear: true
     }
 );
 

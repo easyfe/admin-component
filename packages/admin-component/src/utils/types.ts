@@ -178,6 +178,8 @@ export type _TableColumn = {
     rowKey: "id";
     /** 时间格式分割 */
     split?: string;
+    /** 是否在dialog中显示列 */
+    hideInDialog?: boolean;
 };
 
 /** 表格配置定义 */
