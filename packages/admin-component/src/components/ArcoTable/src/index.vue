@@ -299,7 +299,7 @@
 import { _Btn, _TableColumn, _TableConfig, _TableReq } from "@ap/utils/types";
 import { handleCheckBtnIf, handleCheckBtnDidsable } from "./util";
 import { dateHelper } from "@ap/utils/dateHelper";
-import { cloneDeep, merge } from "lodash-es";
+import { cloneDeep, debounce, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
 import { IconRefresh } from "@arco-design/web-vue/es/icon";
 import { RichText } from "@ap/components/RichText";
@@ -493,9 +493,6 @@ const allSelectedKeys = ref<(string | number)[]>([]);
 //所有页面选中的完整数据
 const allSelectedData = ref<any[]>([]);
 
-/** 是否已经应用过默认选择 */
-const hasAppliedDefaultSelection = ref(false);
-
 /** 请求参数修改 */
 watch(
     [() => props.req, () => props.filterData],
@@ -553,13 +550,10 @@ watch(
 watch(loading, (newVal) => {
     if (!newVal) {
         setTableHeight();
-        if (props.defaultSelectionData.length && !hasAppliedDefaultSelection.value) {
-            // 使用 tableRowKey 作为唯一标识符进行去重
-            const existingKeys = new Set(allSelectedData.value.map((item) => item[tableRowKey.value]));
-            const newItems = props.defaultSelectionData.filter((item) => !existingKeys.has(item[tableRowKey.value]));
-            allSelectedData.value = [...allSelectedData.value, ...newItems];
-
-            //生成新的allSelectedKeys
+        if (props.defaultSelectionData.length) {
+            allSelectedData.value = Array.from(
+                new Set([...allSelectedData.value, ...(props.defaultSelectionData as any[])])
+            );
             allSelectedKeys.value = Array.from(
                 new Set([
                     ...allSelectedKeys.value,
@@ -568,7 +562,6 @@ watch(loading, (newVal) => {
             );
             selectedKeys.value = [...allSelectedKeys.value];
             emits("selectionChange", allSelectedData.value);
-            hasAppliedDefaultSelection.value = true;
         }
         checkSelectedDisabled();
     }
@@ -589,7 +582,6 @@ const clearSelection = (): void => {
     selectedKeys.value = [];
     currentPageSelectedKeys.value = [];
     allSelectedData.value = [];
-    hasAppliedDefaultSelection.value = false;
     emits("selectionChange", []);
 };
 
@@ -814,7 +806,6 @@ const resetSelection = (): void => {
     selectedKeys.value = [];
     currentPageSelectedKeys.value = [];
     allSelectedData.value = [];
-    hasAppliedDefaultSelection.value = false;
 };
 
 //获取列配置
