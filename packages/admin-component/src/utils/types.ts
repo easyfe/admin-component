@@ -220,6 +220,8 @@ export type _TableConfig = {
     allowFlatten?: boolean;
     //表格props
     arcoProps: InstanceType<typeof Table>["$props"];
+    //是否开启快速选择
+    quickSelect?: boolean;
 };
 
 /** 表格请求事件定义 */

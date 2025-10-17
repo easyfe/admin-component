@@ -151,6 +151,7 @@
                         :stripe="true"
                         v-bind="privateTableConfig.arcoProps"
                         @selection-change="onSelectionChange"
+                        @row-click="handleRowClick"
                     >
                         <template #columns>
                             <template v-for="(item, column_index) in privateTableConfig?.columns">
@@ -299,7 +300,7 @@
 import { _Btn, _TableColumn, _TableConfig, _TableReq } from "@ap/utils/types";
 import { handleCheckBtnIf, handleCheckBtnDidsable } from "./util";
 import { dateHelper } from "@ap/utils/dateHelper";
-import { cloneDeep, debounce, merge } from "lodash-es";
+import { cloneDeep, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
 import { IconRefresh } from "@arco-design/web-vue/es/icon";
 import { RichText } from "@ap/components/RichText";
@@ -417,6 +418,16 @@ const enableSelection = computed(() => {
     return privateTableConfig.value?.arcoProps?.rowSelection?.type === "checkbox";
 });
 
+//是否开启单选
+const enableRadioSelection = computed(() => {
+    return privateTableConfig.value?.arcoProps?.rowSelection?.type === "radio";
+});
+
+//是否开启任意选择模式（多选或单选）
+const enableAnySelection = computed(() => {
+    return enableSelection.value || enableRadioSelection.value;
+});
+
 //是否显示footer
 const enableFooter = computed(() => {
     return privateTableConfig.value?.arcoProps?.pagination !== false || enableSelection.value;
@@ -519,6 +530,9 @@ watch(currentPageSelectedKeys, (newVal) => {
 
     // 更新selectedKeys以保持向后兼容
     selectedKeys.value = [...allSelectedKeys.value];
+
+    // 手动调用 onSelectionChange 来同步选中数据
+    onSelectionChange(newVal);
 });
 
 // 当加载新页面时，同步当前页面的选中状态
@@ -878,6 +892,91 @@ const removeSelectedItem = (item: any) => {
     if (allSelectedKeys.value.length === 0) {
         selectedDialogVisible.value = false;
     }
+};
+
+// 处理行点击事件
+const handleRowClick = (record: any, event: Event) => {
+    // 发出rowClick事件，保持向后兼容
+    emits("rowClick", record);
+
+    // 如果没有启用选择模式，直接返回
+    if (!enableAnySelection.value) {
+        return;
+    }
+
+    // 如果快速选择关闭，则不进行选择
+    if (!privateTableConfig.value.quickSelect) {
+        return;
+    }
+
+    // 检查是否点击了不应该触发行选择的元素
+    const target = event.target as HTMLElement;
+    if (shouldPreventRowSelection(target)) {
+        return;
+    }
+
+    // 如果行被禁用，不处理选择
+    if (record.disabled) {
+        return;
+    }
+
+    const key = record[tableRowKey.value];
+
+    if (enableSelection.value) {
+        // 多选模式：切换选中状态
+        const isSelected = currentPageSelectedKeys.value.includes(key);
+        if (isSelected) {
+            // 取消选中
+            currentPageSelectedKeys.value = currentPageSelectedKeys.value.filter((k) => k !== key);
+        } else {
+            // 选中
+            currentPageSelectedKeys.value = [...currentPageSelectedKeys.value, key];
+        }
+    } else if (enableRadioSelection.value) {
+        // 单选模式：设置为唯一选中项
+        currentPageSelectedKeys.value = [key];
+    }
+};
+
+// 判断是否应该阻止行选择（点击了按钮、输入框等元素）
+const shouldPreventRowSelection = (target: HTMLElement): boolean => {
+    // 检查元素本身及其父元素
+    let element: HTMLElement | null = target;
+
+    while (element) {
+        const tagName = element.tagName.toLowerCase();
+        const className = element.className || "";
+
+        // 阻止的元素类型
+        if (
+            // 表单元素
+            ["button", "input", "select", "textarea", "a"].includes(tagName) ||
+            // Arco Design 组件类名
+            className.includes("arco-btn") ||
+            className.includes("arco-input") ||
+            className.includes("arco-select") ||
+            className.includes("arco-switch") ||
+            className.includes("arco-checkbox") ||
+            className.includes("arco-radio") ||
+            className.includes("arco-link") ||
+            className.includes("arco-dropdown") ||
+            className.includes("arco-tooltip") ||
+            className.includes("arco-popover") ||
+            // 自定义按钮组件
+            className.includes("column-btns") ||
+            // 可点击的元素
+            element.getAttribute("role") === "button" ||
+            element.onclick !== null ||
+            // 有点击事件监听器的元素
+            element.hasAttribute("data-clickable")
+        ) {
+            return true;
+        }
+
+        element = element.parentElement;
+    }
+
+    return false;
 };
 
 defineExpose({
