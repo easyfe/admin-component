@@ -17,7 +17,6 @@
 </template>
 <script setup lang="ts">
 import type { Modal } from "@arco-design/web-vue";
-// import { cloneDeep } from "lodash-es";
 import { ArcoTable } from "@ap/components/ArcoTable";
 import { ArcoModal } from "@ap/components/ArcoModal";
 import { ref, computed, watch, watchEffect } from "vue";
@@ -65,29 +64,40 @@ const computedVisible = computed(() => {
     return fnVisible.value && props.visible;
 });
 
-//props里的tableConfig.filterData 需要一直同步给getData的req事件
-
-//arco-table内，是监听props.filterData、props.req值发生变化的时候，重新发起了请求获取数据。
-//由于arco-modal-table绑定的筛选是在本组件内的私有privateFilterData，因此，需要在组件内部，重新封装req请求，否则
-//私有privateFilterData需要通过引用关系同步到外部组件，因为可能需要根据筛选值，进行一些判断，比如columns的显示、req的切换等。
-
-//在这个计算方法内，通过引用关系的方式，让arco-table的filter-data和props里的tableConfig，双向绑定
 const privateTableConfig = computed<any>(() => {
     const defaultConfig = {
         arcoProps: {
             rowKey: "id"
         }
     };
-    if (props.tableConfig?.req?.params) {
-        // eslint-disable-next-line vue/no-mutating-props, vue/no-side-effects-in-computed-properties
-        props.tableConfig.req.params = { ...props.tableConfig.req.params, ...privateFilterData.value };
+
+    // 处理配置
+    const config = { ...defaultConfig, ...props.tableConfig };
+
+    // 包装 req 对象，将 filterData 合并到 params 中
+    if (config.req) {
+        const originalReq = config.req;
+        config.req = {
+            fn: originalReq.fn,
+            get params() {
+                // 每次访问 params 时，都合并最新的 filterData
+                // 如果外部使用了 getter 定义 params，这里会自动获取最新值
+                const baseParams = originalReq.params || {};
+                return { ...baseParams, ...privateFilterData.value };
+            }
+        };
     }
-    return { ...defaultConfig, ...props.tableConfig };
-    // const tableConfig = cloneDeep(props.tableConfig);
-    // if (tableConfig?.req) {
-    //     tableConfig.req.params = { ...tableConfig.req.params, ...privateFilterData.value };
-    // }
-    // return { ...defaultConfig, ...tableConfig };
+
+    // 拦截 onSorterChange 事件，在排序变化时触发刷新
+    if (config.tableConfig?.arcoProps?.onSorterChange) {
+        const originalOnSorterChange = config.tableConfig.arcoProps.onSorterChange;
+        config.tableConfig.arcoProps.onSorterChange = (dataIndex: string, direction: string) => {
+            // 先调用原始的排序回调，让外部更新排序数据（如 orderData.value）
+            originalOnSorterChange(dataIndex, direction);
+        };
+    }
+
+    return config;
 });
 
 watchEffect(() => {
