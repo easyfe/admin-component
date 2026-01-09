@@ -1025,18 +1025,23 @@ onBeforeUnmount(() => {
     .top {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         margin-bottom: 16px;
         .tabs {
             user-select: none;
             flex: 1;
+            min-width: 0;
+            margin-right: 10px;
             :deep(.arco-form-item) {
-                margin-bottom: 0;
+                margin-bottom: 8px;
             }
             .tabs-count {
                 color: #f56c6c;
             }
+        }
+        .btns {
+            flex-shrink: 0;
         }
     }
     .table {
