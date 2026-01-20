@@ -174,7 +174,12 @@
                                         </template>
                                         <!-- 自定义列 -->
                                         <template v-if="item.type === 'custom'">
-                                            {{ item.callback?.(record, rowIndex) }}
+                                            <template v-if="isVNode(item.callback?.(record, rowIndex))">
+                                                <component :is="() => item.callback?.(record, rowIndex)" />
+                                            </template>
+                                            <template v-else>
+                                                {{ item.callback?.(record, rowIndex) }}
+                                            </template>
                                         </template>
                                         <!-- 时间列 -->
                                         <template v-if="item.type === 'date'">
@@ -304,7 +309,7 @@ import { cloneDeep, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
 import { IconRefresh } from "@arco-design/web-vue/es/icon";
 import { RichText } from "@ap/components/RichText";
-import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount, isVNode } from "vue";
 import ColumnBtns from "./components/column-btns/index.vue";
 import SelectedDialog from "./components/selected-dialog/index.vue";
 
