@@ -22,9 +22,10 @@
         "hex-to-css-filter": "^5.4.0",
         "lodash-es": "^4.17.21",
         "tinymce": "^6.7.2",
-        "vue-dompurify-html": "^4.1.4",
-        "@arco-design/web-vue": "2.56.3",
-        "vue": "^3.2.23"
+        "vue-dompurify-html": "^4.1.4"
     },
-    "peerDependencies": {}
+    "peerDependencies": {
+        "@arco-design/web-vue": "2.56.3",
+        "vue": ">=3.2.23"
+    }
 }
