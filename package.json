@@ -9,6 +9,8 @@
         "gen": "node ./script/genNewComp/index.js"
     },
     "devDependencies": {
+        "vue": "^3.2.23",
+        "@arco-design/web-vue": "2.56.3",
         "@arco-plugins/vite-vue": "^1.4.5",
         "@easyfe/eslint-config-vue3ts": "^0.0.4",
         "@rollup/plugin-babel": "^6.0.3",
