@@ -9,13 +9,14 @@
     "dependencies": {
         "@easyfe/admin-component": "workspace:*",
         "lodash-es": "latest",
-        "@easyfe/web-request": "latest"
+        "@easyfe/web-request": "latest",
+        "vue": "^3.5.0"
     },
     "devDependencies": {
         "@types/lodash-es": "latest",
-        "@vitepress-demo-preview/plugin": "1.2.2",
-        "@vitepress-demo-preview/component": "2.3.2",
+        "@vitepress-demo-preview/plugin": "^1.4.1",
+        "@vitepress-demo-preview/component": "^2.6.2",
         "unocss": "^0.53.1",
-        "vitepress": "1.0.0-beta.3"
+        "vitepress": "^1.6.4"
     }
 }
