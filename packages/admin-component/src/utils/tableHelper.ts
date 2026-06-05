@@ -10,6 +10,8 @@ export type BaseTableColunmExtra = {
     minWidth?: string | number;
     fixed?: true | "left" | "right";
     color?: string;
+    /** 是否在列设置中锁定（不可隐藏/拖拽固定，但仍展示），常用于操作列 */
+    disableSetting?: boolean;
 } & TableColumnInstance["$props"];
 export type BaseTableColunmBtn = {
     /** 标签（按钮文字） */

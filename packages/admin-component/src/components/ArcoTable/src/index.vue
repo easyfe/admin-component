@@ -46,6 +46,13 @@
                             </template>
                         </a-button>
                     </template>
+                    <!-- 列设置 -->
+                    <column-setting
+                        v-if="columnSettingEnabled"
+                        :columns="columnState"
+                        @update:columns="onColumnSettingChange"
+                        @reset="onColumnSettingReset"
+                    ></column-setting>
                     <!-- 列表展示方式 -->
                     <a-radio-group
                         v-if="privateTableConfig.allowFlatten"
@@ -154,10 +161,10 @@
                         @row-click="handleRowClick"
                     >
                         <template #columns>
-                            <template v-for="(item, column_index) in privateTableConfig?.columns">
+                            <template v-for="(item, column_index) in displayColumns">
                                 <!-- 插槽类型 -->
                                 <slot v-if="item.type === 'slot'" :name="item.prop"></slot>
-                                <a-table-column v-else :key="column_index" v-bind="getColumnConfig(item)">
+                                <a-table-column v-else :key="item.prop || column_index" v-bind="getColumnConfig(item)">
                                     <template #cell="{ record, rowIndex }">
                                         <!-- 普通列 -->
                                         <template v-if="item.type === 'default'">
@@ -302,16 +309,28 @@
 </template>
 
 <script lang="ts" setup>
-import { _Btn, _TableColumn, _TableConfig, _TableReq } from "@ap/utils/types";
+import { _Btn, _TableColumn, _TableConfig, _TableReq, ColumnSettingItem } from "@ap/utils/types";
 import { handleCheckBtnIf, handleCheckBtnDidsable } from "./util";
 import { dateHelper } from "@ap/utils/dateHelper";
 import { cloneDeep, merge } from "lodash-es";
 import { ArcoForm } from "@ap/components/ArcoForm";
 import { IconRefresh } from "@arco-design/web-vue/es/icon";
 import { RichText } from "@ap/components/RichText";
-import { ref, computed, watch, useSlots, getCurrentInstance, nextTick, onMounted, onBeforeUnmount, isVNode } from "vue";
+import {
+    ref,
+    computed,
+    watch,
+    useSlots,
+    getCurrentInstance,
+    nextTick,
+    onMounted,
+    onActivated,
+    onBeforeUnmount,
+    isVNode
+} from "vue";
 import ColumnBtns from "./components/column-btns/index.vue";
 import SelectedDialog from "./components/selected-dialog/index.vue";
+import ColumnSetting from "./components/column-setting/index.vue";
 
 defineOptions({
     name: "AroTable"
@@ -348,6 +367,9 @@ const emits = defineEmits<{
     (e: "selectionChange", value: any[]): void;
     (e: "rowClick", value: any): void;
 }>();
+
+//表格高度（被 privateTableConfig 与列设置的 immediate watch 引用，需提前声明避免 TDZ）
+const tableHeight = ref("");
 
 const privateFilterConfig = computed(() => {
     props.filterConfig?.forEach((item) => {
@@ -397,6 +419,210 @@ const getAppListStyle = computed<any>(() => {
     return {};
 });
 
+//==================== 列设置 ====================
+const COLUMN_SETTING_STORAGE_PREFIX = "efe-arco-table-columns:";
+//列设置状态（顺序即展示顺序）
+const columnState = ref<ColumnSettingItem[]>([]);
+
+//是否开启列设置
+const columnSettingEnabled = computed(() => privateTableConfig.value.showColumnSetting === true);
+
+//提前捕获组件实例：getColumnStorageKey 在用户操作时（setup 之外）也会被调用，
+//此时 getCurrentInstance() 返回 null，故在 setup 同步阶段先捕获实例。
+const columnTableInstance = getCurrentInstance();
+
+//生成列的唯一标识
+const getColumnKey = (col: _TableColumn, index: number): string => {
+    return col.prop ?? `__col_${index}`;
+};
+
+//列签名：仅当列的数量/标识/标题发生变化时才变化。
+//注意 privateTableConfig 依赖 tableHeight，滚动/resize 会产生新引用，
+//因此不能直接深度监听 columns 引用，否则会反复重建、丢失用户调整。
+const columnSignature = computed(() => {
+    return (props.tableConfig?.columns || [])
+        .map((col, index) => `${getColumnKey(col, index)}:${col.label ?? ""}`)
+        .join("|");
+});
+
+//简单字符串hash，用于自动生成稳定且较短的持久化key
+const hashString = (str: string): string => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+    }
+    return Math.abs(hash).toString(36);
+};
+
+//多表同页时的自动区分符：优先用配置的 active，其次用组件 key
+const getAutoDisambiguator = (): string => {
+    const active = privateTableConfig.value.active;
+    if (active !== undefined && active !== null && active !== "") {
+        return `@${active}`;
+    }
+    const vKey = columnTableInstance?.vnode?.key;
+    if (vKey !== undefined && vKey !== null && vKey !== "") {
+        return `@${String(vKey)}`;
+    }
+    return "";
+};
+
+//本地持久化的存储key
+//1. 显式配置 columnSettingKey 时以其为准；
+//2. 关闭持久化：columnSettingKey 传 false；
+//3. 默认（不配置）自动用「路由路径 + active/key + 列签名」生成稳定key，开箱即记忆。
+const getColumnStorageKey = (): string => {
+    if (!columnSettingEnabled.value) {
+        return "";
+    }
+    const customKey = privateTableConfig.value.columnSettingKey;
+    //显式关闭持久化
+    if (customKey === false) {
+        return "";
+    }
+    if (typeof customKey === "string" && customKey) {
+        return COLUMN_SETTING_STORAGE_PREFIX + customKey;
+    }
+    //自动生成：路由路径 + 区分符(active/key) + 列签名hash，保证同页多表/不同页面互不冲突
+    const autoKey = `${window.location.pathname}${getAutoDisambiguator()}#${hashString(columnSignature.value)}`;
+    return COLUMN_SETTING_STORAGE_PREFIX + autoKey;
+};
+
+//归一化固定方向：兼容 fixed: true（等价固定左侧）
+const normalizeFixed = (fixed: unknown): "left" | "right" | undefined => {
+    if (fixed === true || fixed === "left") {
+        return "left";
+    }
+    if (fixed === "right") {
+        return "right";
+    }
+    return undefined;
+};
+
+//根据配置生成默认列设置状态
+const buildDefaultColumnState = (): ColumnSettingItem[] => {
+    return (privateTableConfig.value.columns || []).map((col, index) => ({
+        key: getColumnKey(col, index),
+        label: col.label || (typeof col.prop === "string" ? col.prop : "") || `列${index + 1}`,
+        visible: col.if !== false,
+        fixed: normalizeFixed(col.fixed),
+        disableSetting: col.disableSetting === true
+    }));
+};
+
+//读取本地持久化的列设置
+const loadSavedColumnState = (): Array<Partial<ColumnSettingItem>> | null => {
+    const storageKey = getColumnStorageKey();
+    if (!storageKey) {
+        return null;
+    }
+    try {
+        const raw = localStorage.getItem(storageKey);
+        if (!raw) {
+            return null;
+        }
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : null;
+    } catch (e) {
+        console.warn("读取列设置失败:", e);
+        return null;
+    }
+};
+
+//持久化当前列设置
+const saveColumnState = (): void => {
+    const storageKey = getColumnStorageKey();
+    if (!storageKey) {
+        return;
+    }
+    try {
+        const data = columnState.value.map((item) => ({
+            key: item.key,
+            visible: item.visible,
+            fixed: item.fixed
+        }));
+        localStorage.setItem(storageKey, JSON.stringify(data));
+    } catch (e) {
+        console.warn("保存列设置失败:", e);
+    }
+};
+
+//初始化列设置状态（合并本地持久化数据，保证新增列仍可展示）
+const initColumnState = (): void => {
+    const defaults = buildDefaultColumnState();
+    const saved = loadSavedColumnState();
+    if (!saved) {
+        columnState.value = defaults;
+        return;
+    }
+    const defaultMap = new Map(defaults.map((item) => [item.key, item]));
+    const ordered: ColumnSettingItem[] = [];
+    //先按本地保存的顺序还原
+    saved.forEach((item) => {
+        const def = item.key ? defaultMap.get(item.key) : undefined;
+        if (def) {
+            ordered.push({ ...def, visible: item.visible ?? def.visible, fixed: item.fixed });
+            defaultMap.delete(def.key);
+        }
+    });
+    //再追加本地未记录的新增列（保持默认顺序）
+    defaults.forEach((item) => {
+        if (defaultMap.has(item.key)) {
+            ordered.push(item);
+        }
+    });
+    columnState.value = ordered;
+};
+
+//最终渲染的列（按设置过滤、排序、固定）
+const displayColumns = computed<_TableColumn[]>(() => {
+    const cols = privateTableConfig.value.columns || [];
+    if (!columnSettingEnabled.value || !columnState.value.length) {
+        return cols;
+    }
+    const colMap = new Map(cols.map((col, index) => [getColumnKey(col, index), col]));
+    const result: _TableColumn[] = [];
+    columnState.value.forEach((setting) => {
+        const col = colMap.get(setting.key);
+        if (col && setting.visible) {
+            //固定方向以设置为准
+            result.push(setting.fixed !== col.fixed ? { ...col, fixed: setting.fixed as any } : col);
+        }
+    });
+    return result;
+});
+
+//列设置变更
+const onColumnSettingChange = (value: ColumnSettingItem[]): void => {
+    columnState.value = value;
+    saveColumnState();
+};
+
+//重置列设置
+const onColumnSettingReset = (): void => {
+    const storageKey = getColumnStorageKey();
+    if (storageKey) {
+        try {
+            localStorage.removeItem(storageKey);
+        } catch (e) {
+            console.warn("清除列设置失败:", e);
+        }
+    }
+    columnState.value = buildDefaultColumnState();
+};
+
+//列配置真正变化时（增删/改名）才重建列设置状态
+watch(
+    columnSignature,
+    () => {
+        if (columnSettingEnabled.value) {
+            initColumnState();
+        }
+    },
+    { immediate: true }
+);
+
 const flattenType = ref<"app" | "list">("app");
 //是否结束
 const finished = ref(false);
@@ -412,8 +638,6 @@ const total = ref(0);
 const privatePage = ref(1);
 //分页条数
 const privateSize = ref(20);
-//表格高度
-const tableHeight = ref("");
 //表格实例
 const baseTableWrapper = ref();
 const baseTable = ref();
@@ -450,7 +674,12 @@ const slots = useSlots();
 
 const topShow = computed(() => {
     return (
-        tabsShow.value || btnsShow.value || slots["tlBtns"] || slots["trBtns"] || privateTableConfig.value.allowFlatten
+        tabsShow.value ||
+        btnsShow.value ||
+        columnSettingEnabled.value ||
+        slots["tlBtns"] ||
+        slots["trBtns"] ||
+        privateTableConfig.value.allowFlatten
     );
 });
 
@@ -746,6 +975,20 @@ const setTableHeight = (): void => {
             // 创建一个新的用于观察高度变化的方法
             const updateHeight = () => {
                 const table = baseTableWrapper.value;
+                if (!table) {
+                    return;
+                }
+                // 守卫：元素被 keep-alive 缓存(detach)或不可见时，getBoundingClientRect 结果不可靠，
+                // 此时计算出的高度会偏大导致 maxHeight 失效，直接跳过，等元素稳定后再算
+                if (table.offsetParent === null) {
+                    return;
+                }
+                const rect = table.getBoundingClientRect();
+                // 守卫：window 仍停留在上一个页面(如详情页)的滚动偏移时 rect.top 会偏小甚至为负，
+                // 此时算出的高度同样不可信，跳过
+                if (rect.top <= 0 || rect.width === 0) {
+                    return;
+                }
                 const footerHeight = enableFooter.value ? 65 : 0;
                 const parentNode = document.getElementsByClassName("frame-view-content")?.[0];
                 let paddingBottom = 0;
@@ -766,7 +1009,6 @@ const setTableHeight = (): void => {
                 }
 
                 // 计算表格容器到视口顶部的距离
-                const rect = table.getBoundingClientRect();
                 tableHeight.value =
                     window.innerHeight - rect.top - footerHeight - paddingBottom - marginBottom - 2 + "px";
             };
@@ -1020,6 +1262,17 @@ onMounted(() => {
     allSelectedData.value = [];
     listMore("init");
 });
+// keep-alive 缓存的页面再次进入时只会触发 onActivated 而非 onMounted。
+// 从有滚动的详情页返回时，window 滚动可能尚未复位、布局也未 settle，
+// 直接重算会拿到脏的 rect.top。这里等到下一帧布局稳定后再重算高度。
+onActivated(() => {
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            setTableHeight();
+        });
+    });
+});
+
 onBeforeUnmount(() => {
     // 清理 ResizeObserver
     if (tableResizeObserver.value) {

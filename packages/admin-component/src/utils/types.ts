@@ -180,6 +180,8 @@ export type _TableColumn = {
     split?: string;
     /** 是否在dialog中显示列 */
     hideInDialog?: boolean;
+    /** 是否在列设置中锁定（不可隐藏/拖拽固定，但仍展示在列表中），常用于操作列 */
+    disableSetting?: boolean;
 };
 
 /** 表格配置定义 */
@@ -188,6 +190,13 @@ export type _TableConfig = {
     refreshFn?: () => void;
     //是否显示重置按钮
     showRefresh?: boolean;
+    //是否显示列设置按钮（展示/隐藏列、拖拽排序、固定列）
+    showColumnSetting?: boolean;
+    //列设置本地持久化key：
+    //  不配置：默认自动用「路由路径+列签名」生成key并记忆到localStorage；
+    //  传字符串：使用自定义key（不同表格需保证唯一）；
+    //  传false：关闭持久化（仅当前会话内存中生效）
+    columnSettingKey?: string | false;
     //表格最大高度
     maxHeight?: number | string | "auto";
     /** 左上角标签 */
@@ -222,6 +231,20 @@ export type _TableConfig = {
     arcoProps: InstanceType<typeof Table>["$props"];
     //是否开启快速选择
     quickSelect?: boolean;
+};
+
+/** 列设置项定义（展示/隐藏、排序、固定） */
+export type ColumnSettingItem = {
+    /** 列唯一标识 */
+    key: string;
+    /** 列展示文案 */
+    label: string;
+    /** 是否展示 */
+    visible: boolean;
+    /** 固定方向 */
+    fixed?: "left" | "right";
+    /** 是否禁止在设置中操作（锁定列） */
+    disableSetting?: boolean;
 };
 
 /** 表格请求事件定义 */
