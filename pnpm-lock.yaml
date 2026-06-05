@@ -134,6 +134,9 @@ importers:
       vue3-colorpicker:
         specifier: ^2.2.2
         version: 2.3.0(@aesoper/normal-utils@0.1.5)(@popperjs/core@2.11.8)(@vueuse/core@12.8.2(typescript@5.4.2))(gradient-parser@1.1.1)(lodash-es@4.17.23)(tinycolor2@1.6.0)(vue-types@4.2.1(vue@3.5.27(typescript@5.4.2)))(vue@3.5.27(typescript@5.4.2))
+      vuedraggable:
+        specifier: ^4.1.0
+        version: 4.1.0(vue@3.5.27(typescript@5.4.2))
 
   packages/docs:
     dependencies:
@@ -155,16 +158,16 @@ importers:
         version: 4.17.12
       '@vitepress-demo-preview/component':
         specifier: ^2.6.2
-        version: 2.6.2(vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(typescript@5.4.2))(vue@3.5.27(typescript@5.4.2))
+        version: 2.6.2(vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(sortablejs@1.14.0)(typescript@5.4.2))(vue@3.5.27(typescript@5.4.2))
       '@vitepress-demo-preview/plugin':
         specifier: ^1.4.1
-        version: 1.4.1(markdown-it-container@3.0.0)(vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(typescript@5.4.2))(vue@3.5.27(typescript@5.4.2))
+        version: 1.4.1(markdown-it-container@3.0.0)(vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(sortablejs@1.14.0)(typescript@5.4.2))(vue@3.5.27(typescript@5.4.2))
       unocss:
         specifier: ^0.53.1
         version: 0.53.6(postcss@8.5.6)(rollup@4.59.0)(vite@5.4.21(@types/node@16.18.126)(less@4.5.1)(sass@1.97.3))
       vitepress:
         specifier: ^1.6.4
-        version: 1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(typescript@5.4.2)
+        version: 1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(sortablejs@1.14.0)(typescript@5.4.2)
 
 packages:
 
@@ -3524,6 +3527,9 @@ packages:
     resolution: {integrity: sha512-FtyOnWN/wCHTVXOMwvSv26d+ko5vWlIDD6zoUJ7LW8vh+ZBC8QdljveRP+crNrtBwioEUWy/4dMtbBjA4ioNlg==}
     engines: {node: '>=0.10.0'}
 
+  sortablejs@1.14.0:
+    resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==}
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -4094,6 +4100,11 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  vuedraggable@4.1.0:
+    resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==}
+    peerDependencies:
+      vue: ^3.0.1
 
   wcwidth@1.0.1:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
@@ -5298,11 +5309,11 @@ snapshots:
       vite: 5.4.21(@types/node@16.18.126)(less@4.5.1)(sass@1.97.3)
       vue: 3.5.27(typescript@5.4.2)
 
-  '@vitepress-demo-preview/component@2.6.2(vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(typescript@5.4.2))(vue@3.5.27(typescript@5.4.2))':
+  '@vitepress-demo-preview/component@2.6.2(vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(sortablejs@1.14.0)(typescript@5.4.2))(vue@3.5.27(typescript@5.4.2))':
     dependencies:
       '@vitepress-demo-preview/core': 0.3.0
       floating-vue: 5.2.2(vue@3.5.27(typescript@5.4.2))
-      vitepress: 1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(typescript@5.4.2)
+      vitepress: 1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(sortablejs@1.14.0)(typescript@5.4.2)
       vue: 3.5.27(typescript@5.4.2)
       vue-sonner: 2.0.9
     transitivePeerDependencies:
@@ -5314,12 +5325,12 @@ snapshots:
     dependencies:
       '@flypeng/tool': 5.7.5
 
-  '@vitepress-demo-preview/plugin@1.4.1(markdown-it-container@3.0.0)(vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(typescript@5.4.2))(vue@3.5.27(typescript@5.4.2))':
+  '@vitepress-demo-preview/plugin@1.4.1(markdown-it-container@3.0.0)(vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(sortablejs@1.14.0)(typescript@5.4.2))(vue@3.5.27(typescript@5.4.2))':
     dependencies:
       '@flypeng/tool': 5.7.5
       markdown-it: 14.1.1
       markdown-it-container: 3.0.0
-      vitepress: 1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(typescript@5.4.2)
+      vitepress: 1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(sortablejs@1.14.0)(typescript@5.4.2)
       vue: 3.5.27(typescript@5.4.2)
 
   '@volar/language-core@1.11.1':
@@ -5459,13 +5470,14 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@vueuse/integrations@12.8.2(focus-trap@7.8.0)(typescript@5.4.2)':
+  '@vueuse/integrations@12.8.2(focus-trap@7.8.0)(sortablejs@1.14.0)(typescript@5.4.2)':
     dependencies:
       '@vueuse/core': 12.8.2(typescript@5.4.2)
       '@vueuse/shared': 12.8.2(typescript@5.4.2)
       vue: 3.5.27(typescript@5.4.2)
     optionalDependencies:
       focus-trap: 7.8.0
+      sortablejs: 1.14.0
     transitivePeerDependencies:
       - typescript
 
@@ -7878,6 +7890,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  sortablejs@1.14.0: {}
+
   source-map-js@1.2.1: {}
 
   source-map-resolve@0.5.3:
@@ -8427,7 +8441,7 @@ snapshots:
       less: 4.5.1
       sass: 1.97.3
 
-  vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(typescript@5.4.2):
+  vitepress@1.6.4(@algolia/client-search@5.48.0)(@types/node@16.18.126)(less@4.5.1)(postcss@8.5.6)(sass@1.97.3)(search-insights@2.17.3)(sortablejs@1.14.0)(typescript@5.4.2):
     dependencies:
       '@docsearch/css': 3.8.2
       '@docsearch/js': 3.8.2(@algolia/client-search@5.48.0)(search-insights@2.17.3)
@@ -8440,7 +8454,7 @@ snapshots:
       '@vue/devtools-api': 7.7.9
       '@vue/shared': 3.5.27
       '@vueuse/core': 12.8.2(typescript@5.4.2)
-      '@vueuse/integrations': 12.8.2(focus-trap@7.8.0)(typescript@5.4.2)
+      '@vueuse/integrations': 12.8.2(focus-trap@7.8.0)(sortablejs@1.14.0)(typescript@5.4.2)
       focus-trap: 7.8.0
       mark.js: 8.11.1
       minisearch: 7.2.0
@@ -8563,6 +8577,11 @@ snapshots:
       '@vue/shared': 3.5.27
     optionalDependencies:
       typescript: 5.4.2
+
+  vuedraggable@4.1.0(vue@3.5.27(typescript@5.4.2)):
+    dependencies:
+      sortablejs: 1.14.0
+      vue: 3.5.27(typescript@5.4.2)
 
   wcwidth@1.0.1:
     dependencies:
