@@ -95,8 +95,8 @@ const emitChange = (): void => {
     emits("update:columns", cloneDeep(localColumns.value));
 };
 
-const onToggle = (item: ColumnSettingItem, visible: boolean): void => {
-    item.visible = visible;
+const onToggle = (item: ColumnSettingItem, visible: boolean | (string | number | boolean)[]): void => {
+    item.visible = visible as boolean;
     emitChange();
 };
 
