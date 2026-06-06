@@ -57,10 +57,12 @@ export default defineConfig({
         }
     },
     vite: {
-        ssr: { noExternal: ["@arco-design/web-vue", "@easyfe/web-request", "@easyfe/admin-component"] },
+        ssr: { noExternal: ["@arco-design/web-vue", "@easyfe/web-request", "@easyfe/admin-component", "vuedraggable"] },
         resolve: {
             alias: {
-                "@": path.resolve(__dirname, "../src")
+                "@": path.resolve(__dirname, "../src"),
+                // vuedraggable 的 main 指向 CJS/UMD 产物，SSR 构建时会产生错误的 vue default 导入，改用其 ESM 源码
+                vuedraggable: "vuedraggable/src/vuedraggable.js"
             }
         },
         plugins: [
